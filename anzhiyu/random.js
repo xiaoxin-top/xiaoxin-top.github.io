@@ -1,3 +1,3 @@
-var posts=["2024/06/16/24小时无人直播流/","2024/06/23/Air14/","2024/06/16/docker配置代理/","2024/06/15/hello-world/","2024/06/22/markdown语法/","2024/06/15/零成本搭建个人博客/","2024/06/17/比对文本工具-beyondcompare/"];function toRandomPost(){
+var posts=["looking/5c120c19.html","looking/3766f053.html","looking/8f33bcf2.html","looking/c8e05f01.html","looking/f134a8e5.html","looking/3610a686.html","looking/4d33b968.html"];function toRandomPost(){
     pjax.loadUrl('/'+posts[Math.floor(Math.random() * posts.length)]);
   };
