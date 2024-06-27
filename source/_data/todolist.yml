@@ -1,0 +1,42 @@
+# seat控制清单在左栏还是右栏显示，completed控制是否已完成
+- class_name: 想做的项目
+  seat: left
+  todo_list:
+    - content: 搭建博客
+      completed: false
+
+- class_name: 想看的书
+  seat: right
+  todo_list:
+    - content: 《骆驼祥子》
+      completed: false
+    - content: 《活着》
+      completed: true
+
+- class_name: 想买的东西
+  seat: left
+  todo_list:
+    - content: S-Works Tarmac SL8
+      completed: false
+    - content: Nas
+      completed: false
+    - content: MacBook
+      completed: false
+
+- class_name: 想学的技术
+  seat: right
+  todo_list:
+    - content: 各种网络协议
+      completed: false
+    - content: 前端
+      completed: false
+
+- class_name: 想去的地方
+  seat: right
+  todo_list:
+    - content: 桂林
+      completed: false
+    - content: 西藏
+      completed: false
+    - content: 北京（带上家人）
+      competed: false

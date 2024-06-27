@@ -1,0 +1,55 @@
+- class_name: 好物
+  description: 实物装备推荐
+  tip: 一起享受科技带来的乐趣
+  top_background: https://images8.alphacoders.com/135/thumb-1920-1357614.jpeg
+  good_things:
+    - title: 生产力
+      description: 提升自己生产效率的硬件设备
+      equipment_list:
+        - name: 联想小新Air 14 2020锐龙版
+          specification: 双通道16GB DDR4 3200内存和512GB M.2 SSD
+          description: 深空灰的配色，整机轻至1.38kg，薄至16.9mm，为老板赚钱刚刚好
+          image: /img/equipment/xiaoxin.png
+          link: /posts/air14.html
+        - name: iphone12
+          specification: 蓝色 / 128G
+          description: 事事玩得转，买前生产力，买后爱奇艺。
+          image: /img/equipment/iphone12.jpg
+          link: https://www.apple.com.cn/iphone-12/
+        - name: iPhone 11
+          specification: 黑色 / 128G
+          description: 超瓷晶面板，曲线优美机身扁平的圆角设计
+          image: /img/equipment/iphone11.jpg
+          link: https://www.apple.com.cn/iphone-12/specs/
+        - name: AirPods（第二代）
+          specification: 标准版
+          description: 没钱换三代啦
+          image: https://2f.zol-img.com.cn/product/206/89/ceHa1jQ83nDuo.jpg
+          link: https://www.apple.com.cn/airpods-2nd-generation/
+    - title: 出行
+      description: 用来出行的实物及设备
+      equipment_list:
+        - name: camp ace7000
+          specification: 中国红
+          description: 远航,自由,骑上小红就能到你想去的地方
+          image: /img/equipment/camp-removebg.png
+          link: https://www.bilibili.com/video/BV1WNgqehERe/?spm_id_from=333.999.0.0
+        - name: 360全景相机
+          specification: X3
+          description: 全方位无死角拍摄，可玩性高
+          image: /img/equipment/360.jpg
+          link: https://www.insta360.com/cn/product/insta360-x3
+        # - name: NATIONAL GEOGRAPHIC学生书包🎒
+        #   specification: 红白色
+        #   description: 国家地理黑色大包，冰冰🧊同款，颜值在线且实用。
+        #   image: https://bu.dusays.com/2023/07/05/64a4c40ab698a.webp
+        #   link: https://item.jd.com/100005889786.html
+
+    - title: 游戏
+      description: 打发不想学习的时间
+      equipment_list:
+        - name: Xbox
+          specification: 手柄
+          description: 过上游戏人生
+          image: https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.alicdn.com%2Fi2%2F3217798395%2FO1CN01r6GlN22BsxilczqiE_%21%213217798395.jpg&refer=http%3A%2F%2Fimg.alicdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1721837163&t=120956811983857650de33762eda2839
+          link: https://www.xbox.com/en-US/accessories/controllers/xbox-wireless-controller

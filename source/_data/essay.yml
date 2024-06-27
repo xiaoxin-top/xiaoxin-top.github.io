@@ -1,0 +1,38 @@
+- title: 即刻短文
+  subTitle: 咸鱼的日常生活
+  tips: 随时随地，分享生活
+  buttonText: 关于我
+  buttonLink: /about/
+  limit: 30
+  home_essay: true
+  top_background: https://images.alphacoders.com/135/thumb-1920-1351266.jpeg
+  essay_list:
+    - content: 搞了一星期的博客了、太多东西啦^……^🌟
+      date: 2024/06/20
+      image:
+        - https://images3.alphacoders.com/130/thumb-1920-1303477.jpeg
+      address: 广州市
+
+    - content: 今天想在阿里云(****)服务器上搭个图床、😵结果折腾了一天还没搞定（国内想搞个网站太难了....）
+      date: 2024/06/22
+      image:
+        - https://images5.alphacoders.com/135/thumb-1920-1353434.png
+      address: 广州市
+
+    - content: 今天完成了音乐馆的配置、可以配置自己喜欢的歌单啦😄（加班了一天当了一天的背锅侠😈）
+      date: 2024/06/23
+      image:
+        - https://artfiles.alphacoders.com/160/160864.jpeg
+      address: 广州市
+
+    - content: 今天完成了评论系统的配置👏，网友们可以留言啦📭
+      date: 2024/06/24
+      image:
+        - https://images2.alphacoders.com/135/1356425.jpeg
+      address: 广州市
+    
+    - content: 今天完成了评论系统主页的定位功能
+      date: 2024/06/25
+      image:
+        - https://images2.alphacoders.com/135/1356425.jpeg
+      address: 广州市

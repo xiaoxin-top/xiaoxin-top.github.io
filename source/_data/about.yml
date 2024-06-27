@@ -1,0 +1,108 @@
+- class_name: 关于页
+  subtitle: 渴望自由而放心放飞⚡
+  avatarImg: https://avatarfiles.alphacoders.com/360/thumb-1920-360174.png
+  avatarSkills:
+    left:
+      - 🤖️ 科技技能爱好者
+      - 🔍 分享与热心帮助
+      - 🏠 智能家居小能手
+      - 🔨 熬夜打工一条龙
+    right:
+      - 今天的砖格外烫 🧱
+      - 希望富婆进我心 🤝
+      - 脚踏实地行动派 🏃
+      - 啥事不能微信说 💢
+  name: xiaoxin
+  description: 野生社畜、疯狂码代码想要成为稚晖君那样的大牛
+  aboutsiteTips:
+    tips: 追求
+    title1: 源于
+    title2: 热爱而去 感受
+    word:
+      - 学习
+      - 生活
+      - 程序
+      - 游戏
+  helloAbout: Hello there!
+  skillsTips:
+    tips: 技能
+    title: 疯狂物色开源好项目
+  careers:
+    tips: 生涯
+    title: 无限进步
+    item:
+      - EDU,社畜
+    img: https://images8.alphacoders.com/135/thumb-1920-1359507.jpeg
+  statistic:
+    link: /archives
+    text: 文章隧道
+    cover: https://image.anheyu.com/useruploads/108/2023/05/03/64521704ae1cf.jpg
+  map:
+    title: 我现在住在
+    StrengthenTitle: 中国，广州市
+    background: https://images5.alphacoders.com/134/1346850.png
+    backgroundDark: https://img2024.cnblogs.com/blog/2956573/202406/2956573-20240620230719776-662467189.jpg
+  selfInfo:
+    selfInfoTips1: 生于
+    selfInfoContentYear: 1996
+    selfInfoTips2: 广州
+    selfInfoContent2: 打工人
+    selfInfoTips3: 现在职业
+    selfInfoContent3: 为老板拼命赚钱👨‍🎓
+  personalities:
+    author_name: 沉默
+    personality_type: FAST
+    photo_url: https://images7.alphacoders.com/135/1350478.jpeg
+    personality_img: https://images.alphacoders.com/135/1350257.jpeg
+    name_url: https://www.16personalities.com/ch/istp-%E4%BA%BA%E6%A0%BC
+  maxim:
+    maxim_tips: 座右铭
+    maxim_top: 红色信仰
+    maxim_bottom: 世界和平
+  buff:
+    buff_tips: 特长
+    buff_top: 没啥特长
+    buff_bottom: 菜鸟、又菜又爱玩 MAX
+  game:
+    game_tips: 爱好游戏
+    game_title: LOL
+    game_uid: "UID: 亮出你的狗牌"
+    game_bg: https://images5.alphacoders.com/469/thumb-1920-469133.jpg
+  comic:
+    comic_tips: 爱好番剧
+    comic_title: 追番
+    comic_list:
+      - name: 海贼王
+        href: https://www.iyf.tv/search/%E6%B5%B7%E8%B4%BC%E7%8E%8B
+        cover: https://images3.alphacoders.com/135/thumb-1920-1355326.jpeg
+      - name: 鬼灭之刃
+        href: https://www.iyf.tv/search/%E9%AC%BC%E7%81%AD%E4%B9%8B%E5%88%83
+        cover: https://images6.alphacoders.com/132/thumb-1920-1329839.jpeg
+      - name: 进击的巨人
+        href: https://www.iyf.tv/search/%E8%BF%9B%E5%87%BB%E7%9A%84%E5%B7%A8%E4%BA%BA
+        cover: https://images8.alphacoders.com/108/thumb-1920-1081458.jpg
+      - name: 刺客伍六七
+        href: https://www.iyf.tv/search/%E5%88%BA%E5%AE%A2%E4%BC%8D%E5%85%AD%E4%B8%83
+        cover: https://mfiles.alphacoders.com/946/946582.jpg
+      - name: 秦时明月
+        href: https://www.iyf.tv/search/%E7%A7%A6%E6%97%B6%E6%98%8E%E6%9C%88
+        cover: https://picfiles.alphacoders.com/362/362882.jpg
+  like:
+    like_tips: 关注偏好
+    like_title: 数码科技
+    like_bg: https://image.anheyu.com/useruploads/108/2023/04/01/64284b3e55b56.webp
+    like_bottom: 手机、电脑软硬件、网络
+  music:
+    music_tips: 音乐偏好
+    music_title: 民风
+    music_bg: https://avatarfiles.alphacoders.com/373/thumb-1920-373770.png
+    music_link: https://m801.music.126.net/20240620235922/dae3227b5827c5008d9035c4d7f96c87/jdyyaac/obj/w5rDlsOJwrLDjj7CmsOj/28481785377/90df/b183/bdca/20786bf6e12a9c49a97b7a835651de4b.m4a
+  # reward_list:
+  #   - name: 依古比古
+  #     amount: 5
+  #     datatime: 2023-03-05
+  #   - name: 枫
+  #     amount: 10.06
+  #     datatime: 2023-05-14
+
+  extra: true
