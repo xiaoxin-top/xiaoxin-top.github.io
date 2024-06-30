@@ -10,28 +10,31 @@ date: 2024-06-16 22:41:34
 
 ## docker配置代理
 
-### 老方法配置 proxy.conf
+### 老方法配置 proxy.conf （亲测有效-需要魔法）
 1. 创建配置文件目录
 ```bash
 mkdir -p /etc/systemd/system/docker.service.d
 ```
 2. 创建配置文件
+- **注意：**HTTP_PROXY和HTTPS_PROXY 是你的梯子所在的主机的ip和端口
 ```bash
 cat > /etc/systemd/system/docker.service.d/proxy.conf <<EOF
 [Service]
-Environment="HTTP_PROXY=http://192.168.3.3:7890/" 
-Environment="HTTPS_PROXY=http://192.168.3.3:7890/"
+Environment="HTTP_PROXY=http://192.168.1.111:7890/" 
+Environment="HTTPS_PROXY=http://192.168.1.111:7890/"
 Environment="NO_PROXY=localhost,127.0.0.1,hub.docker.com,registry.aliyuncs.com"
 EOF
 ```
 
-3. 重启docker
+3. 如果是clash的需要打开 **Allow LAN**
+
+4. 重启docker
 ```bash
 systemctl daemon-reload && systemctl restart docker
 systemctl show --property=Environment docker    # 查看配置
 ```
 
-### 新方法
+### 新方法 
 对config.json 文件进行修改
 ```bash
 mkdir -p ~/.docker
