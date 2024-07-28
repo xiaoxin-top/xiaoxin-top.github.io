@@ -211,37 +211,6 @@
       </tags>
   </entry>
   <entry>
-    <title>docker配置代理</title>
-    <url>/looking/c8e05f01.html</url>
-    <content><![CDATA[<h2 id="docker配置代理"><a href="#docker配置代理" class="headerlink" title="docker配置代理"></a>docker配置代理</h2><h3 id="老方法配置-proxy-conf-（亲测有效-需要魔法）"><a href="#老方法配置-proxy-conf-（亲测有效-需要魔法）" class="headerlink" title="老方法配置 proxy.conf （亲测有效-需要魔法）"></a>老方法配置 proxy.conf （亲测有效-需要魔法）</h3><ol>
-<li>创建配置文件目录<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /etc/systemd/system/docker.service.d</span><br></pre></td></tr></tbody></table></figure></li>
-<li>创建配置文件</li>
-</ol>
-<ul>
-<li><strong>注意：</strong>HTTP_PROXY和HTTPS_PROXY 是你的梯子所在的主机的ip和端口<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/systemd/system/docker.service.d/proxy.conf &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">[Service]</span></span><br><span class="line"><span class="string">Environment="HTTP_PROXY=http://192.168.1.111:7890/" </span></span><br><span class="line"><span class="string">Environment="HTTPS_PROXY=http://192.168.1.111:7890/"</span></span><br><span class="line"><span class="string">Environment="NO_PROXY=localhost,127.0.0.1,hub.docker.com,registry.aliyuncs.com"</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></tbody></table></figure></li>
-</ul>
-<ol start="3">
-<li><p>如果是clash的需要打开 <strong>Allow LAN</strong></p>
-</li>
-<li><p>重启docker</p>
-<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">systemctl daemon-reload &amp;&amp; systemctl restart docker</span><br><span class="line">systemctl show --property=Environment docker    <span class="comment"># 查看配置</span></span><br></pre></td></tr></tbody></table></figure></li>
-</ol>
-<h3 id="新方法"><a href="#新方法" class="headerlink" title="新方法"></a>新方法</h3><p>对config.json 文件进行修改</p>
-<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/.docker</span><br><span class="line"><span class="built_in">cat</span> &gt; ~/.docker/config.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">{</span></span><br><span class="line"><span class="string"> "proxies":</span></span><br><span class="line"><span class="string"> {</span></span><br><span class="line"><span class="string">   "default":</span></span><br><span class="line"><span class="string">   {</span></span><br><span class="line"><span class="string">     "httpProxy": "http://192.168.3.3:8889",</span></span><br><span class="line"><span class="string">     "httpsProxy": "http://192.168.3.3:8889",</span></span><br><span class="line"><span class="string">     "noProxy": "127.0.0.1,docker.io,hub.docker.com,hub-mirror.c.163.com,pvjhx571.mirror.aliyuncs.com"</span></span><br><span class="line"><span class="string">   }</span></span><br><span class="line"><span class="string"> }</span></span><br><span class="line"><span class="string">}</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></tbody></table></figure>
-<p>#将 “httpProxy” 和 “httpsProxy” 的值替换为你的代理服务器地址和端口。<br>#注意：”noProxy”: 指定不需要使用代理的地址列表，通常包括本地地址。</p>
-<h2 id="使用国外的docker镜像源"><a href="#使用国外的docker镜像源" class="headerlink" title="使用国外的docker镜像源"></a>使用国外的docker镜像源</h2><p><strong>注意需要魔法</strong><br>#如果需要将 Docker 镜像下载代理到国外 Docker 官网或其他国外镜像源，可以使用以下方法：<br>在 daemon.json 中配置如下：</p>
-<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">{</span><br><span class="line">  <span class="string">"registry-mirrors"</span>: [<span class="string">"https://your-registry-mirror-url"</span>]</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>N1盒子玩法-内网穿透公网访问</title>
     <url>/looking/1b6b5cf0.html</url>
     <content><![CDATA[<p class="p center logo large">内网穿透</p>
@@ -346,6 +315,66 @@
       </categories>
       <tags>
         <tag>N1盒子,istoreOS,内网穿透</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决flask3.x的run参数无效</title>
+    <url>/looking/faa8fd0f.html</url>
+    <content><![CDATA[<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p><code>app.py</code></p>
+<blockquote>
+<p>这里app.run(True, port=5001, host=’0.0.0.0’, debug=True) 启动时参数无效</p>
+</blockquote>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"></span><br><span class="line"><span class="comment">#创建flask应用对象</span></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">'/'</span></span>)     </span><span class="comment"># 路由</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello_world</span>():  <span class="comment"># 视图函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Hello World!'</span>   <span class="comment"># 响应给前端</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#添加路由和视图函数</span></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">'/index/'</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'index 首页'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    app.run(<span class="literal">True</span>, port=<span class="number">5001</span>, host=<span class="string">'0.0.0.0'</span>, debug=<span class="literal">True</span>)   <span class="comment">#启动服务器</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># run()启动的时候还可以添加参数</span></span><br><span class="line"><span class="comment">#    - debug 是否开启调试模式、开启后修改过的python代码会自动刷新重启、而不用手动停止在启动</span></span><br><span class="line"><span class="comment">#    - port  启动时指定服务器的端口号、默认是5000</span></span><br><span class="line"><span class="comment">#    - host  主机、默认是127.0.0.1、指定为0.0.0.0表示所有的ip都可以访问</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><div class="note warning flat"><p>如果使用专业版的pycharm创建的flask项目，那么flask的run()方法参数无效的<br>原因是pycharm创建的flask项目，默认的启动方式为flask的默认的run方法，看右上角运行的方式，默认是flask的run方法，所以导致配置run()参数无效</p>
+</div>
+
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方案1："><a href="#方案1：" class="headerlink" title="方案1："></a>方案1：</h3><ul>
+<li>手动创建项目，不要使用pycharm自带的flask项目创建</li>
+<li>或者如果你安装的 Flask 版本是 2.3 或更高版本，则可以直接使用 <code>--debug</code> 命令行选项来开启调试模式; </li>
+<li>在项目的根目录下（与app.py同级目录下）启动：<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ flask run --debug</span><br><span class="line"><span class="comment">#或</span></span><br><span class="line">$ flask run --debug --host=0.0.0.0 --port=5001</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h3 id="方案2："><a href="#方案2：" class="headerlink" title="方案2："></a>方案2：</h3><ul>
+<li>在在项目的根目录下（与app.py同级目录下）创建一个文件：<code>.flaskenv</code> 文件内容写：<code>FLASK_DEBUG=1</code> 即可启动调试模式</li>
+</ul>
+<h3 id="也可参考"><a href="#也可参考" class="headerlink" title="也可参考"></a>也可参考</h3><p><a href="href=%22https://www.chunten.com/article/265/32.html">参考：flask中app.run()参设置端口、debug模式失效，真正解决</a> </p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>flask，python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker配置代理</title>
+    <url>/looking/c8e05f01.html</url>
+    <content><![CDATA[<h2 id="docker配置代理"><a href="#docker配置代理" class="headerlink" title="docker配置代理"></a>docker配置代理</h2><h3 id="老方法配置-proxy-conf-（亲测有效-需要魔法）"><a href="#老方法配置-proxy-conf-（亲测有效-需要魔法）" class="headerlink" title="老方法配置 proxy.conf （亲测有效-需要魔法）"></a>老方法配置 proxy.conf （亲测有效-需要魔法）</h3><ol>
+<li>创建配置文件目录<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /etc/systemd/system/docker.service.d</span><br></pre></td></tr></tbody></table></figure></li>
+<li>创建配置文件</li>
+</ol>
+<ul>
+<li><strong>注意：</strong>HTTP_PROXY和HTTPS_PROXY 是你的梯子所在的主机的ip和端口<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/systemd/system/docker.service.d/proxy.conf &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">[Service]</span></span><br><span class="line"><span class="string">Environment="HTTP_PROXY=http://192.168.1.111:7890/" </span></span><br><span class="line"><span class="string">Environment="HTTPS_PROXY=http://192.168.1.111:7890/"</span></span><br><span class="line"><span class="string">Environment="NO_PROXY=localhost,127.0.0.1,hub.docker.com,registry.aliyuncs.com"</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<ol start="3">
+<li><p>如果是clash的需要打开 <strong>Allow LAN</strong></p>
+</li>
+<li><p>重启docker</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">systemctl daemon-reload &amp;&amp; systemctl restart docker</span><br><span class="line">systemctl show --property=Environment docker    <span class="comment"># 查看配置</span></span><br></pre></td></tr></tbody></table></figure></li>
+</ol>
+<h3 id="新方法"><a href="#新方法" class="headerlink" title="新方法"></a>新方法</h3><p>对config.json 文件进行修改</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/.docker</span><br><span class="line"><span class="built_in">cat</span> &gt; ~/.docker/config.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">{</span></span><br><span class="line"><span class="string"> "proxies":</span></span><br><span class="line"><span class="string"> {</span></span><br><span class="line"><span class="string">   "default":</span></span><br><span class="line"><span class="string">   {</span></span><br><span class="line"><span class="string">     "httpProxy": "http://192.168.3.3:8889",</span></span><br><span class="line"><span class="string">     "httpsProxy": "http://192.168.3.3:8889",</span></span><br><span class="line"><span class="string">     "noProxy": "127.0.0.1,docker.io,hub.docker.com,hub-mirror.c.163.com,pvjhx571.mirror.aliyuncs.com"</span></span><br><span class="line"><span class="string">   }</span></span><br><span class="line"><span class="string"> }</span></span><br><span class="line"><span class="string">}</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></tbody></table></figure>
+<p>#将 “httpProxy” 和 “httpsProxy” 的值替换为你的代理服务器地址和端口。<br>#注意：”noProxy”: 指定不需要使用代理的地址列表，通常包括本地地址。</p>
+<h2 id="使用国外的docker镜像源"><a href="#使用国外的docker镜像源" class="headerlink" title="使用国外的docker镜像源"></a>使用国外的docker镜像源</h2><p><strong>注意需要魔法</strong><br>#如果需要将 Docker 镜像下载代理到国外 Docker 官网或其他国外镜像源，可以使用以下方法：<br>在 daemon.json 中配置如下：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">{</span><br><span class="line">  <span class="string">"registry-mirrors"</span>: [<span class="string">"https://your-registry-mirror-url"</span>]</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
       </tags>
   </entry>
   <entry>
@@ -505,6 +534,18 @@
       </tags>
   </entry>
   <entry>
+    <title>k8s集群二进制安装</title>
+    <url>/looking/688fa470.html</url>
+    <content><![CDATA[<p><a href="https://www.cnblogs.com/littlecc/p/18226484">查看我的博客园有更详细的安装步骤:https://www.cnblogs.com/littlecc/p/18226484</a></p>
+]]></content>
+      <categories>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>k8s集群二进制安装</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>k8s常用命令</title>
     <url>/looking/c0b83bc9.html</url>
     <content><![CDATA[<h1 id="集群管理"><a href="#集群管理" class="headerlink" title="集群管理"></a>集群管理</h1><p><code>1. 查看集群节点状态:</code></p>
@@ -649,6 +690,69 @@
       </tags>
   </entry>
   <entry>
+    <title>keepalive高可用</title>
+    <url>/looking/121ebbda.html</url>
+    <content><![CDATA[<h2 id="1-安装-Keepalived"><a href="#1-安装-Keepalived" class="headerlink" title="1. 安装 Keepalived"></a>1. 安装 Keepalived</h2><ul>
+<li>在主机 C 和 D 上安装 Keepalived：<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo yum install keepalived -y  <span class="comment"># CentOS/RHEL</span></span><br><span class="line">sudo apt-get install keepalived -y  <span class="comment"># Debian/Ubuntu</span></span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h2 id="2-配置-Keepalived"><a href="#2-配置-Keepalived" class="headerlink" title="2. 配置 Keepalived"></a>2. 配置 Keepalived</h2><ul>
+<li><p>配置 Keepalived 以管理 VIP 并在故障转移时运行自定义脚本。</p>
+</li>
+<li><p>在主机 C 上创建/编辑 /etc/keepalived/keepalived.conf：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs {</span><br><span class="line">        #keepalived机器标识，无特殊作用，一般为机器名</span><br><span class="line">        router_id  LVS_DEVEL</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 {</span><br><span class="line">    state MASTER</span><br><span class="line">    interface bond0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 100</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass your_password</span><br><span class="line">    }</span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.100/24 dev bond0</span><br><span class="line">    }</span><br><span class="line">    track_script {</span><br><span class="line">        chk_service</span><br><span class="line">    }</span><br><span class="line">    notify_master "/etc/keepalived/master.sh"</span><br><span class="line">    notify_backup "/etc/keepalived/backup.sh"</span><br><span class="line">    notify_fault "/etc/keepalived/fault.sh"</span><br><span class="line">    nopreempt           # 添加这个参数以防止主机故障恢复后自动切回-防止业务的断层</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">vrrp_script chk_service {</span><br><span class="line">    script "/etc/keepalived/check_service.sh"</span><br><span class="line">    interval 2</span><br><span class="line">    weight -20</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<li><p>在主机 D 上创建/编辑 /etc/keepalived/keepalived.conf：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs {</span><br><span class="line">        #keepalived机器标识，无特殊作用，一般为机器名</span><br><span class="line">        router_id  LVS_DEVEL</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 {</span><br><span class="line">    state BACKUP</span><br><span class="line">    interface bond0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 50</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass your_password</span><br><span class="line">    }   </span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.100/24 dev bond0</span><br><span class="line">    }</span><br><span class="line">    track_script {</span><br><span class="line">        chk_service</span><br><span class="line">    }</span><br><span class="line">    notify_master "/etc/keepalived/master.sh"</span><br><span class="line">    notify_backup "/etc/keepalived/backup.sh"</span><br><span class="line">    notify_fault "/etc/keepalived/fault.sh"</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">vrrp_script chk_service {</span><br><span class="line">    script "/etc/keepalived/check_service.sh"</span><br><span class="line">    interval 2</span><br><span class="line">    weight -20</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p>192.168.1.100/24 dev bond0          #ip是虚拟ip  这里bond0 是虚拟网卡名称（通过bond技术来让双网卡做冗余-详情看<strong>linux双网卡冗余</strong>篇）</p>
+</li>
+<li><p>自行编写以下三个脚本（不是必须）：</p>
+<blockquote>
+<p>notify_master “/etc/keepalived/master.sh”      #选举为master时执行脚本<br>notify_backup “/etc/keepalived/backup.sh”      #选举为backup时执行脚本<br>notify_fault “/etc/keepalived/fault.sh”        #故障时执行脚本</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="3-编写自定义脚本"><a href="#3-编写自定义脚本" class="headerlink" title="3. 编写自定义脚本"></a>3. 编写自定义脚本</h2><ul>
+<li>/etc/keepalived/check_service.sh：用于检查业务服务是否运行<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 检查业务服务是否运行的脚本</span></span><br><span class="line"><span class="comment"># 假设业务服务名为 "my_service"</span></span><br><span class="line"><span class="keyword">if</span> systemctl status my_service &gt; /dev/null; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">exit</span> 0</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h2 id="4-设置脚本权限"><a href="#4-设置脚本权限" class="headerlink" title="4. 设置脚本权限"></a>4. 设置脚本权限</h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> +x /etc/keepalived/*.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="5-启动-Keepalived"><a href="#5-启动-Keepalived" class="headerlink" title="5. 启动 Keepalived"></a>5. 启动 Keepalived</h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo systemctl start keepalived</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> keepalived</span><br></pre></td></tr></tbody></table></figure>
+
+<div class="note warning flat"><p>nginx + keepalived 高可用配置参考</p>
+</div>
+<div calss="anzhiyu-tag-link"><a class="tag-Link" target="_blank" href="https://www.cnblogs.com/littlecc/p/17762083.html">
+    <div class="tag-link-tips">引用站外地址</div>
+    <div class="tag-link-bottom">
+        <div class="tag-link-left" style="">
+          <i class="anzhiyufont anzhiyu-icon-link" style=""></i>
+        </div>
+        <div class="tag-link-right">
+            <div class="tag-link-title">参考</div>
+            <div class="tag-link-sitename">keepalive</div>
+        </div>
+        <i class="anzhiyufont anzhiyu-icon-angle-right"></i>
+    </div>
+    </a></div>
+
+
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><div class="note info flat"><p>配置多个Virtual Router</p>
+</div>
+<blockquote>
+<p>在主机A和主机B上分别配置Keepalived<br>以下是主机A上的配置示例，你需要在主机B上进行类似的配置，但将state字段设置为BACKUP，并调整priority字段。</p>
+</blockquote>
+<p><code>主机A的Keepalived配置（/etc/keepalived/keepalived.conf)</code></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line"># 全局配置</span><br><span class="line">global_defs {</span><br><span class="line">   router_id LVS_DEVEL</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"># 配置虚拟路由器1（服务1）</span><br><span class="line">vrrp_instance VI_1 {</span><br><span class="line">    state MASTER</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 100</span><br><span class="line">    advert_int 1</span><br><span class="line"></span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1111</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.140</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"># 配置虚拟路由器2（服务2）</span><br><span class="line">vrrp_instance VI_2 {</span><br><span class="line">    state MASTER</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 52</span><br><span class="line">    priority 100</span><br><span class="line">    advert_int 1</span><br><span class="line"></span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 2222</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.141</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>主机B的Keepalived配置（/etc/keepalived/keepalived.conf)</code></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs {</span><br><span class="line">   router_id LVS_DEVEL</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 {</span><br><span class="line">    state BACKUP</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 90</span><br><span class="line">    advert_int 1</span><br><span class="line"></span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1111</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.140</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">vrrp_instance VI_2 {</span><br><span class="line">    state BACKUP</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 52</span><br><span class="line">    priority 90</span><br><span class="line">    advert_int 1</span><br><span class="line"></span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 2222</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.141</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>]]></content>
+      <categories>
+        <category>运维</category>
+      </categories>
+      <tags>
+        <tag>keepalive, 高可用</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>k8s集群安装-kubeadm安装</title>
     <url>/looking/c38bf18e.html</url>
     <content><![CDATA[<h1 id="kubeadm-安装集群"><a href="#kubeadm-安装集群" class="headerlink" title="kubeadm 安装集群"></a>kubeadm 安装集群</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><table>
@@ -775,81 +879,6 @@
       <tags>
         <tag>k8s</tag>
         <tag>kubeadm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>k8s集群二进制安装</title>
-    <url>/looking/688fa470.html</url>
-    <content><![CDATA[<p><a href="https://www.cnblogs.com/littlecc/p/18226484">查看我的博客园有更详细的安装步骤:https://www.cnblogs.com/littlecc/p/18226484</a></p>
-]]></content>
-      <categories>
-        <category>k8s</category>
-      </categories>
-      <tags>
-        <tag>k8s集群二进制安装</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>keepalive高可用</title>
-    <url>/looking/121ebbda.html</url>
-    <content><![CDATA[<h2 id="1-安装-Keepalived"><a href="#1-安装-Keepalived" class="headerlink" title="1. 安装 Keepalived"></a>1. 安装 Keepalived</h2><ul>
-<li>在主机 C 和 D 上安装 Keepalived：<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo yum install keepalived -y  <span class="comment"># CentOS/RHEL</span></span><br><span class="line">sudo apt-get install keepalived -y  <span class="comment"># Debian/Ubuntu</span></span><br></pre></td></tr></tbody></table></figure></li>
-</ul>
-<h2 id="2-配置-Keepalived"><a href="#2-配置-Keepalived" class="headerlink" title="2. 配置 Keepalived"></a>2. 配置 Keepalived</h2><ul>
-<li><p>配置 Keepalived 以管理 VIP 并在故障转移时运行自定义脚本。</p>
-</li>
-<li><p>在主机 C 上创建/编辑 /etc/keepalived/keepalived.conf：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs {</span><br><span class="line">        #keepalived机器标识，无特殊作用，一般为机器名</span><br><span class="line">        router_id  LVS_DEVEL</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 {</span><br><span class="line">    state MASTER</span><br><span class="line">    interface bond0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 100</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass your_password</span><br><span class="line">    }</span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.100/24 dev bond0</span><br><span class="line">    }</span><br><span class="line">    track_script {</span><br><span class="line">        chk_service</span><br><span class="line">    }</span><br><span class="line">    notify_master "/etc/keepalived/master.sh"</span><br><span class="line">    notify_backup "/etc/keepalived/backup.sh"</span><br><span class="line">    notify_fault "/etc/keepalived/fault.sh"</span><br><span class="line">    nopreempt           # 添加这个参数以防止主机故障恢复后自动切回-防止业务的断层</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">vrrp_script chk_service {</span><br><span class="line">    script "/etc/keepalived/check_service.sh"</span><br><span class="line">    interval 2</span><br><span class="line">    weight -20</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
-<li><p>在主机 D 上创建/编辑 /etc/keepalived/keepalived.conf：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs {</span><br><span class="line">        #keepalived机器标识，无特殊作用，一般为机器名</span><br><span class="line">        router_id  LVS_DEVEL</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 {</span><br><span class="line">    state BACKUP</span><br><span class="line">    interface bond0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 50</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass your_password</span><br><span class="line">    }   </span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.100/24 dev bond0</span><br><span class="line">    }</span><br><span class="line">    track_script {</span><br><span class="line">        chk_service</span><br><span class="line">    }</span><br><span class="line">    notify_master "/etc/keepalived/master.sh"</span><br><span class="line">    notify_backup "/etc/keepalived/backup.sh"</span><br><span class="line">    notify_fault "/etc/keepalived/fault.sh"</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">vrrp_script chk_service {</span><br><span class="line">    script "/etc/keepalived/check_service.sh"</span><br><span class="line">    interval 2</span><br><span class="line">    weight -20</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-</li>
-<li><p>192.168.1.100/24 dev bond0          #ip是虚拟ip  这里bond0 是虚拟网卡名称（通过bond技术来让双网卡做冗余-详情看<strong>linux双网卡冗余</strong>篇）</p>
-</li>
-<li><p>自行编写以下三个脚本（不是必须）：</p>
-<blockquote>
-<p>notify_master “/etc/keepalived/master.sh”      #选举为master时执行脚本<br>notify_backup “/etc/keepalived/backup.sh”      #选举为backup时执行脚本<br>notify_fault “/etc/keepalived/fault.sh”        #故障时执行脚本</p>
-</blockquote>
-</li>
-</ul>
-<h2 id="3-编写自定义脚本"><a href="#3-编写自定义脚本" class="headerlink" title="3. 编写自定义脚本"></a>3. 编写自定义脚本</h2><ul>
-<li>/etc/keepalived/check_service.sh：用于检查业务服务是否运行<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 检查业务服务是否运行的脚本</span></span><br><span class="line"><span class="comment"># 假设业务服务名为 "my_service"</span></span><br><span class="line"><span class="keyword">if</span> systemctl status my_service &gt; /dev/null; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">exit</span> 0</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></tbody></table></figure></li>
-</ul>
-<h2 id="4-设置脚本权限"><a href="#4-设置脚本权限" class="headerlink" title="4. 设置脚本权限"></a>4. 设置脚本权限</h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> +x /etc/keepalived/*.sh</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="5-启动-Keepalived"><a href="#5-启动-Keepalived" class="headerlink" title="5. 启动 Keepalived"></a>5. 启动 Keepalived</h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">sudo systemctl start keepalived</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> keepalived</span><br></pre></td></tr></tbody></table></figure>
-
-<div class="note warning flat"><p>nginx + keepalived 高可用配置参考</p>
-</div>
-<div calss="anzhiyu-tag-link"><a class="tag-Link" target="_blank" href="https://www.cnblogs.com/littlecc/p/17762083.html">
-    <div class="tag-link-tips">引用站外地址</div>
-    <div class="tag-link-bottom">
-        <div class="tag-link-left" style="">
-          <i class="anzhiyufont anzhiyu-icon-link" style=""></i>
-        </div>
-        <div class="tag-link-right">
-            <div class="tag-link-title">参考</div>
-            <div class="tag-link-sitename">keepalive</div>
-        </div>
-        <i class="anzhiyufont anzhiyu-icon-angle-right"></i>
-    </div>
-    </a></div>
-
-
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><div class="note info flat"><p>配置多个Virtual Router</p>
-</div>
-<blockquote>
-<p>在主机A和主机B上分别配置Keepalived<br>以下是主机A上的配置示例，你需要在主机B上进行类似的配置，但将state字段设置为BACKUP，并调整priority字段。</p>
-</blockquote>
-<p><code>主机A的Keepalived配置（/etc/keepalived/keepalived.conf)</code></p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line"># 全局配置</span><br><span class="line">global_defs {</span><br><span class="line">   router_id LVS_DEVEL</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"># 配置虚拟路由器1（服务1）</span><br><span class="line">vrrp_instance VI_1 {</span><br><span class="line">    state MASTER</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 100</span><br><span class="line">    advert_int 1</span><br><span class="line"></span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1111</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.140</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"># 配置虚拟路由器2（服务2）</span><br><span class="line">vrrp_instance VI_2 {</span><br><span class="line">    state MASTER</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 52</span><br><span class="line">    priority 100</span><br><span class="line">    advert_int 1</span><br><span class="line"></span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 2222</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.141</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<p><code>主机B的Keepalived配置（/etc/keepalived/keepalived.conf)</code></p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs {</span><br><span class="line">   router_id LVS_DEVEL</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 {</span><br><span class="line">    state BACKUP</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 90</span><br><span class="line">    advert_int 1</span><br><span class="line"></span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1111</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.140</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">vrrp_instance VI_2 {</span><br><span class="line">    state BACKUP</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 52</span><br><span class="line">    priority 90</span><br><span class="line">    advert_int 1</span><br><span class="line"></span><br><span class="line">    authentication {</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 2222</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    virtual_ipaddress {</span><br><span class="line">        192.168.1.141</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>]]></content>
-      <categories>
-        <category>运维</category>
-      </categories>
-      <tags>
-        <tag>keepalive, 高可用</tag>
       </tags>
   </entry>
   <entry>
@@ -1016,6 +1045,305 @@
       </categories>
       <tags>
         <tag>linux,namespace,漏洞</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux路由表详解-追踪路由</title>
+    <url>/looking/996ca674.html</url>
+    <content><![CDATA[
+    <p class="centered-text">linux 路由表详解</p>
+
+
+
+<h1 id="通过-route-命令查看-Linux-内核的路由表："><a href="#通过-route-命令查看-Linux-内核的路由表：" class="headerlink" title="通过 route 命令查看 Linux 内核的路由表："></a><code>通过 route 命令查看 Linux 内核的路由表：</code></h1><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$route</span></span><br><span class="line">Kernel IP routing table</span><br><span class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</span><br><span class="line">default         _gateway        0.0.0.0         UG    0      0        0 p5p1</span><br><span class="line">default         _gateway        0.0.0.0         UG    100    0        0 em1</span><br><span class="line">10.150.0.0      10.150.54.126   255.255.0.0     UG    0      0        0 em2</span><br><span class="line">10.150.54.0     0.0.0.0         255.255.255.128 U     0      0        0 em2</span><br><span class="line">link-local      0.0.0.0         255.255.0.0     U     1002   0        0 p5p1</span><br><span class="line">link-local      0.0.0.0         255.255.0.0     U     1004   0        0 em1</span><br><span class="line">link-local      0.0.0.0         255.255.0.0     U     1005   0        0 em2</span><br><span class="line">172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0</span><br><span class="line">172.18.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-de7a849d77f1</span><br><span class="line">172.19.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-9bc222159381</span><br><span class="line">172.24.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-2d803453c335</span><br><span class="line">172.33.1.0      _gateway        255.255.255.0   UG    0      0        0 em1</span><br><span class="line">172.33.9.0      0.0.0.0         255.255.255.0   U     100    0        0 em1</span><br><span class="line">172.33.137.0    0.0.0.0         255.255.255.0   U     0      0        0 p5p1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="variable">$route</span> -n</span><br><span class="line">Kernel IP routing table</span><br><span class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</span><br><span class="line">0.0.0.0         172.11.120.254  0.0.0.0         UG    0      0        0 p5p1</span><br><span class="line">0.0.0.0         172.32.8.254    0.0.0.0         UG    100    0        0 em1</span><br><span class="line">10.150.0.0      10.150.54.126   255.255.0.0     UG    0      0        0 em2</span><br><span class="line">10.150.54.0     0.0.0.0         255.255.255.128 U     0      0        0 em2</span><br><span class="line">169.254.0.0     0.0.0.0         255.255.0.0     U     1002   0        0 p5p1</span><br><span class="line">169.254.0.0     0.0.0.0         255.255.0.0     U     1004   0        0 em1</span><br><span class="line">169.254.0.0     0.0.0.0         255.255.0.0     U     1005   0        0 em2</span><br><span class="line">172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0</span><br><span class="line">172.18.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-de7a849d77f1</span><br><span class="line">172.19.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-9bc222159381</span><br><span class="line">172.24.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-2d803453c335</span><br><span class="line">172.33.1.0      172.32.8.254    255.255.255.0   UG    0      0        0 em1</span><br><span class="line">172.33.9.0      0.0.0.0         255.255.255.0   U     100    0        0 em1</span><br><span class="line">172.33.137.0    0.0.0.0         255.255.255.0   U     0      0        0 p5p1</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="各列字段说明："><a href="#各列字段说明：" class="headerlink" title="各列字段说明："></a><code>各列字段说明：</code></h2><table>
+<thead>
+<tr>
+<th>列</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Destination</td>
+<td>目标网络网关或目标主机。Destination 为 default（<code>0.0.0.0</code>）时，表示这个是默认网关，所有数据都发到这个网关（这里是<code>172.11.120.254</code>和<code>172.32.8.254</code>）</td>
+</tr>
+<tr>
+<td>Gateway</td>
+<td>本机的网关地址，<code>0.0.0.0</code> 表示当前记录对应的 Destination 跟本机在同一个网段，通信时不需要经过网关；如不在同一个网段，可借助相关路由跳过去，如这里借助<code>10.150.54.126</code>网关跳到<code>10.150.0.0</code> 段的网络</td>
+</tr>
+<tr>
+<td>Genmask</td>
+<td>目标网络(Destination) 字段的网络掩码，Destination 是主机时需要设置为 255.255.255.255，是默认路由时会设置为 0.0.0.0</td>
+</tr>
+<tr>
+<td>Flags</td>
+<td>标记，含义参考表格后面的解释</td>
+</tr>
+<tr>
+<td>Metric</td>
+<td>路由距离，到达指定网络所需的中转数，是大型局域网和广域网设置所必需的 （不在Linux内核中使用。）</td>
+</tr>
+<tr>
+<td>Ref</td>
+<td>路由项引用次数 （不在Linux内核中使用。）</td>
+</tr>
+<tr>
+<td>Use</td>
+<td>此路由项被路由软件查找的次数</td>
+</tr>
+<tr>
+<td>Iface</td>
+<td>网卡名字，例如 <code>em1</code></td>
+</tr>
+</tbody></table>
+<p><code>Flags 含义：</code></p>
+<blockquote>
+<p>U 路由是活动的<br>H 目标是个主机<br>G 需要经过网关<br>R 恢复动态路由产生的表项<br>D 由路由的后台程序动态地安装<br>M 由路由的后台程序修改<br>! 拒绝路由</p>
+</blockquote>
+<p><code>如何看这个路由表：</code></p>
+<blockquote>
+<p>从右往左看：比如第三行： <code>10.150.0.0 | 10.150.54.126  | 255.255.0.0   |  UG |   0   |   0    |  0 | em2</code><br>流量数据从本机的网卡<code>em2</code>出去到(交换机)网关<code>10.150.54.126</code>，借助这个网关将数据送往目标网络地址(网关)<code>10.150.0.0</code><br>其中要明确地址<code>10.150.54.126</code> 与 <code>10.150.0.0</code> 是能通讯的、否则流量是过不去的</p>
+</blockquote>
+<h2 id="ip-route-show查看"><a href="#ip-route-show查看" class="headerlink" title="ip route show查看"></a><code>ip route show查看</code></h2><blockquote>
+<p>“ip route show” 是 Linux 中的命令，用于显示计算机上的路由表。路由表记录了计算机如何将数据包发送到网络中的其他计算机</p>
+</blockquote>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$ip</span> route show</span><br><span class="line">default via 172.33.137.254 dev p5p1</span><br><span class="line">default via 172.33.9.254 dev em1 proto static metric 100</span><br><span class="line">10.150.0.0/16 via 10.150.54.126 dev em2</span><br><span class="line">10.15.54.0/25 dev em2 proto kernel scope <span class="built_in">link</span> src 10.15.54.10</span><br><span class="line">169.254.0.0/16 dev p5p1 scope <span class="built_in">link</span> metric 1002</span><br><span class="line">172.3.1.0/24 via 172.13.9.254 dev em1</span><br><span class="line">172.3.1.0/24 dev em1 proto kernel scope <span class="built_in">link</span> src 172.3.1.12 metric 100</span><br><span class="line">172.2.136.0/24 dev p5p1 proto kernel scope <span class="built_in">link</span> src 172.2.136.12</span><br></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p>上面路由记录的格式通常都是这样的：<br>&lt;目的地&gt; via &lt;网关&gt; dev &lt;接口网卡&gt; proto &lt;协议&gt; src &lt;源地址或本机地址&gt; &lt;附加信息&gt;</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>列</th>
+<th>解析</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&lt;目的地&gt;</td>
+<td><code>目的地网络网关或主机</code>，可以是具体的 IP 地址（如 <code>10.15.54.50</code>）、网络地址 （如<code>10.15.54.0/25</code>）或 default 等。default 会在没有其他符合的路由条目时使用；</td>
+</tr>
+<tr>
+<td>via &lt;网关&gt;</td>
+<td>可选字段，指的是到达<code>目的地址</code>需要使用的<code>网关的 IP 地址</code>。<code>发往</code>这个路由条目对应的目的地的数据包，都会把这个<code>网关设置为下一跳</code>，经由此<code>&lt;via&gt;</code>发往最终目的地；比如：<code>em1</code>网卡 通过 网关<code>via 172.13.9.254</code>跳到 <code>172.3.1.0/24</code>网段 ，这样就实现了不同网段之间的通信</td>
+</tr>
+<tr>
+<td>dev &lt;接口网卡&gt;</td>
+<td>要发往本条目对应目的地时所需要使用的网络接口（设备网卡）；</td>
+</tr>
+<tr>
+<td>proto &lt;协议&gt;</td>
+<td>添加本条条目的协议。常见的值有：<code>kernel</code>（本条目由内核添加）、<code>static</code>（手动添加）、<code>dhcp</code>（通过 DHCP 添加）、<code>boot</code> （在启动时添加）、<code>redirect</code> （由 ICMP 重定向添加）。此外，该值还可以是 <code>bgp</code>、<code>ospf</code> 这类动态路由协议。该值可能是整数值或者一个字符串值，字符串值都可以在 <code>/etc/iproute2/rt_protos</code> 中找到；</td>
+</tr>
+<tr>
+<td>src &lt;源地址&gt;</td>
+<td>在使用本条路由，向目的地发送数据包时所需采用的 IP 地址；</td>
+</tr>
+<tr>
+<td>&lt;附加信息&gt;</td>
+<td>代表多个可选项，常见的有：见下面</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>&lt;附加信息&gt;：</p>
+<ul>
+<li>scope <scope>：定义这条路由的范围:<ul>
+<li><code>global</code> 表示有网关的单播（unicast）路由</li>
+<li><code>link</code> 表示直连的单播或广播（broadcast）路由</li>
+<li><code>host</code> 表示本地（local）路由。该值可能是一个整数值或者是字符串值，字符串值应该能在 <code>/etc/iproute2/rt_scopes</code> 中找到</li>
+</ul>
+</scope></li>
+<li>metric &lt;整数&gt;：表示路由的优先级，数字越小优先级越高。<code>最小值为 0</code> ，<code>最大值为 65535</code></li>
+<li>table &lt;表名/数字&gt;：如果一条路由不属于 main 表，则会在这里指出该路由所属的路由表</li>
+</ul>
+</blockquote>
+<hr>
+<hr>
+<h2 id="路由追踪：traceroute"><a href="#路由追踪：traceroute" class="headerlink" title="路由追踪：traceroute <ip地址>"></a>路由追踪：traceroute &lt;ip地址&gt;</h2><blockquote>
+<p>该命令用于显示数据包到主机间的路径。</p>
+</blockquote>
+<p><code>使用详解：</code></p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$traceroute</span> xiaoxin123.top</span><br><span class="line"></span><br><span class="line">traceroute to xiaoxin123.top (198.181.38.205), 30 hops max, 60 byte packets</span><br><span class="line"> 1  10.124.224.22 (10.124.224.22)  1.228 ms 11.63.120.22 (11.63.120.22)  0.990 ms 11.63.116.22 (11.63.116.22)  0.871 ms</span><br><span class="line"> 2  11.63.116.121 (11.63.116.121)  1.287 ms 11.63.116.77 (11.63.116.77)  1.233 ms 11.63.116.117 (11.63.116.117)  1.267 ms</span><br><span class="line"> 3  11.48.239.69 (11.48.239.69)  0.929 ms 11.88.168.21 (11.88.168.21)  5.739 ms 11.48.239.117 (11.48.239.117)  0.909 ms</span><br><span class="line"> 4  45.112.220.37 (45.112.220.37)  1.256 ms 45.112.220.25 (45.112.220.25)  1.291 ms 45.112.220.77 (45.112.220.77)  1.971 ms</span><br><span class="line"> 5  157.119.193.86 (157.119.193.86)  10.308 ms 117.49.54.74 (117.49.54.74)  35.224 ms 117.49.54.102 (117.49.54.102)  8.936 ms</span><br><span class="line"> 6  11.94.143.102 (11.94.143.102)  9.224 ms  7.991 ms 117.49.37.246 (117.49.37.246)  7.707 ms</span><br><span class="line"> 7  * * *</span><br><span class="line"> 8  183.2.182.113 (183.2.182.113)  10.336 ms  9.631 ms 58.61.162.161 (58.61.162.161)  7.523 ms</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 数字（第几条）   ip（当前跳的所在地址）   三个时间（RTT，也就是往返时延）</span></span><br><span class="line"><span class="comment"># 显示* * * 的情况 ：</span></span><br><span class="line">  &gt; 可能是路由器禁止了ICMP数据包</span><br><span class="line">  &gt;如果从某跳开始所有的时间都成了星号，即超时，则网络故障很有可能就出现在了这一跳</span><br></pre></td></tr></tbody></table></figure>
+<p><code>相关命令参数:</code></p>
+<blockquote>
+<p>traceroute [-dFlnrvx][-f&lt;存活数值&gt;][-g&lt;网关&gt;…][-i&lt;网络界面&gt;][-m&lt;存活数值&gt;][-p&lt;通信端口&gt;][-s&lt;来源地址&gt;][-t&lt;服务类型&gt;][-w&lt;超时秒数&gt;][主机名称或IP地址][数据包大小]<br>-d 使用Socket层级的排错功能。<br>-f&lt;存活数值&gt; 设置第一个检测数据包的存活数值TTL的大小。<br>-F 设置勿离断位。<br>-g&lt;网关&gt; 设置来源路由网关，最多可设置8个。<br>-i&lt;网络界面&gt; 使用指定的网络界面送出数据包。<br>-I 使用ICMP回应取代UDP资料信息。<br>-m&lt;存活数值&gt; 设置检测数据包的最大存活数值TTL的大小。<br>-n 直接使用IP地址而非主机名称。<br>-p&lt;通信端口&gt; 设置UDP传输协议的通信端口。<br>-r 忽略普通的Routing Table，直接将数据包送到远端主机上。<br>-s&lt;来源地址&gt; 设置本地主机送出数据包的IP地址。<br>-t&lt;服务类型&gt; 设置检测数据包的TOS数值。<br>-v 详细显示指令的执行过程。<br>-w&lt;超时秒数&gt; 设置等待远端主机回报的时间。<br>-x 开启或关闭数据包的正确性检验。</p>
+</blockquote>
+<hr>
+<h2 id="简化的路由追踪命令-tracepath"><a href="#简化的路由追踪命令-tracepath" class="headerlink" title="简化的路由追踪命令: tracepath "></a>简化的路由追踪命令: tracepath <ip></ip></h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$tracepath</span> xiaoxin123.top</span><br><span class="line"> 1?: [LOCALHOST]                                         pmtu 1500</span><br><span class="line"> 1:  10.124.224.22                                         0.844ms</span><br><span class="line"> 1:  10.124.224.22                                         0.767ms</span><br><span class="line"> 2:  11.63.116.117                                         1.122ms</span><br><span class="line"> 3:  11.48.239.125                                         1.124ms</span><br><span class="line"> 4:  45.112.220.37                                         1.194ms</span><br><span class="line"> 5:  117.49.54.50                                          6.602ms</span><br><span class="line"> 6:  117.49.37.250                                         7.319ms</span><br><span class="line"> 7:  no reply</span><br><span class="line"> 8:  183.2.182.125                                        14.588ms asymm  7</span><br><span class="line">Resume: pmtu 1500 hops 16 back 16</span><br></pre></td></tr></tbody></table></figure>
+<p><code>相关命令参数：</code></p>
+<blockquote>
+<p>用法及参数<br>-n 显示IP，不显示主机<br>-l 初始化包的长度，默认65535<br>-b 打印主机名以及IP信息<br>-p 指定端口<br>-m 设置最大的跳跃节点数，默认是30</p>
+</blockquote>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p><code>arp</code></p>
+<blockquote>
+<ol>
+<li>ARP 代表“地址解析协议”，是一种用于将 IP 地址映射到局域网上的物理 MAC 地址的协议<br>ARP（地址解析协议）是一种网络协议，用于从 <code>IP</code> 地址中找出设备的<code>硬件 (MAC) 地址</code>。</li>
+<li>当设备想要与本地网络上的其他设备通信时使用它，发送设备使用 <code>ARP</code> 将 IP 地址转换为 MAC 地址。</li>
+<li>设备发送一个 ARP 请求消息，其中包含接收设备的 IP 地址。 本地网段上的所有设备都会看到该消息，但只有具有该 IP 地址的设备会使用包含其 MAC 地址的 ARP 回复消息进行响应。 发送设备现在有足够的信息将数据包发送到接收设备。</li>
+</ol>
+</blockquote>
+<p><code>ARP过程的解释：</code></p>
+<blockquote>
+<p>假设主机 A 想与主机 B 通信。主机 A 知道主机 B 的 IP 地址，但不知道主机 B 的 MAC 地址。为了找出主机B的MAC地址，主机A发送一个ARP请求，列出主机B的IP地址作为目的IP地址，MAC地址为FF:FF:FF:FF:FF:FF（以太网广播） .交换机会将帧转发到所有接口。<br>网段上的每个设备都会收到该数据包，但由于目标 IP 地址是主机 B 的 IP 地址，因此只有主机 B 会回复 ARP 回复数据包，并列出其 MAC 地址。</p>
+</blockquote>
+<p><code>Linux中的arp命令是什么</code></p>
+<blockquote>
+<p>ARP 代表“地址解析协议”，是一种用于将 IP 地址映射到局域网上的物理 MAC 地址的协议。</p>
+</blockquote>
+<h3 id="arp常用命令"><a href="#arp常用命令" class="headerlink" title="arp常用命令"></a>arp常用命令</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 1.查看 Linux 上的 ARP 表</span></span><br><span class="line">arp -a</span><br><span class="line"><span class="comment">#输出：第一列是IP地址，第二列对应MAC地址。</span></span><br><span class="line">gateway (172.16.31.253) at ee:ff:ff:ff:ff:se [ether] on eth0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#2. 指定 IP 地址来查找特定 IP 地址的 ARP 缓存条目</span></span><br><span class="line">arp -a &lt;IP地址&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#3. 删除arp表中指定的 IP 地址</span></span><br><span class="line">arp -d 192.168.67.23</span><br><span class="line"></span><br><span class="line"><span class="comment">#4. 删除所有</span></span><br><span class="line">arp -d *</span><br><span class="line"></span><br><span class="line"><span class="comment">#5. 添加静态条目将IP地址解析为物理地址</span></span><br><span class="line">arp -s 192.168.67.15 00-a5-00-34-c3-09</span><br></pre></td></tr></tbody></table></figure>]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux, 网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>rainmeter自定义个性化windows桌面</title>
+    <url>/looking/1c9e63ed.html</url>
+    <content><![CDATA[<p><strong>效果如下：</strong><br><img src="https://pic.imgdb.cn/item/667f9fead9c307b7e91156ee.png" alt="桌面效果"><br><strong>主题包</strong>:<br><a href="https://www.alipan.com/s/p645sPEZxhF">提取码：6ij4</a></p>
+<p><strong>如果使用我的皮肤包，只需下载主题包解压后将目录放到<em>C:\Users\Administrator\Documents\Rainmeter\Skins</em>即可</strong></p>
+<h2 id="1-下载rainmeter"><a href="#1-下载rainmeter" class="headerlink" title="1.下载rainmeter"></a>1.下载rainmeter</h2><p><a href="https://www.rainmeter.net/download">下载地址</a></p>
+<h2 id="2-安装-一直按下一步即可"><a href="#2-安装-一直按下一步即可" class="headerlink" title="2.安装 一直按下一步即可"></a>2.安装 一直按下一步即可</h2><ul>
+<li>效果如下：<br><img src="https://pic.imgdb.cn/item/667fa11bd9c307b7e912d511.png" alt="安装"></li>
+</ul>
+<h2 id="3-下载主题"><a href="#3-下载主题" class="headerlink" title="3.下载主题"></a>3.下载主题</h2><ul>
+<li><p>这里有很多主题，可以按自己的风格下载安装即可<br><a href="https://zhutix.com/tag/rainmeter/?post_order=views">下载地址</a></p>
+</li>
+<li><p>我这里下载</p>
+<ul>
+<li>Welfare</li>
+<li>RetrOcOlOr</li>
+</ul>
+</li>
+<li><p>然后在这个基础上自定义自己的桌面</p>
+</li>
+</ul>
+<h2 id="4-自定义桌面（代码的解析）"><a href="#4-自定义桌面（代码的解析）" class="headerlink" title="4.自定义桌面（代码的解析）"></a>4.自定义桌面（代码的解析）</h2><ul>
+<li><p>图标代码：<br><img src="https://pic.imgdb.cn/item/667fa368d9c307b7e9169882.png"></p>
+</li>
+<li><p>代码解析：（注意这是rainmeter的安装路径）</p>
+<ul>
+<li><p>在主题文件中：C:\Users\Administrator\Documents\Welfare@Resources\Variables.inc 找到这个变量文件打开：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"></span><br><span class="line">; Rainmeter Variables</span><br><span class="line">[Variables]</span><br><span class="line">Author=Morteza Nasirivand</span><br><span class="line">Language=English</span><br><span class="line">Location=IRXX0018</span><br><span class="line">Unit=f</span><br><span class="line">Format=H</span><br><span class="line">Hidden=0</span><br><span class="line">Hidden2=1</span><br><span class="line">Player=WMP</span><br><span class="line"></span><br><span class="line">;图标变量</span><br><span class="line">;如果有多个图标按这个格式添加即可</span><br><span class="line"></span><br><span class="line">;如这里是 我的电脑 打开的图标</span><br><span class="line">LinkIcon1NameAndPath=#@#\MyComputer.png			;图标原始状态</span><br><span class="line">HoverIcon1NameAndPath=#@#\MyComputer-1.png		;鼠标放到图标后的变化的图标</span><br><span class="line">Link1Text=myComputer							;图标名</span><br><span class="line">LinkLocationPath1=["shell:MyComputerFolder"]	;点击图标后做的动作、如打开相应的应用或链接网站</span><br><span class="line"></span><br><span class="line">LinkIcon2NameAndPath=#@#\google-1.png</span><br><span class="line">HoverIcon2NameAndPath=#@#\google.png</span><br><span class="line">Link2Text=google</span><br><span class="line">LinkLocationPath2=["C:\Program Files\Google\Chrome\Application\chrome.exe"]</span><br><span class="line"></span><br><span class="line">LinkIcon3NameAndPath=#@#\github.png</span><br><span class="line">HoverIcon3NameAndPath=#@#\github-4.png</span><br><span class="line">Link3Text=github.com</span><br><span class="line">LinkLocationPath3=!Execute ["https://github.com"]</span><br><span class="line"></span><br><span class="line">PythonImgPath1=#@#\python-3.png</span><br><span class="line">PythonImgPath2=#@#\python-5.png</span><br><span class="line">PythonLinkText=pycharm</span><br><span class="line">PythonAppPath=!Execute ["D:\install\pycharm\PyCharm 2022.2.5\bin\pycharm64"]</span><br><span class="line"></span><br><span class="line">LinkIcon5NameAndPath=#@#\gmail-1.png</span><br><span class="line">HoverIcon5NameAndPath=#@#\gmail.png</span><br><span class="line">Link5Text=gmail</span><br><span class="line">LinkLocationPath5=!Execute ["https://mail.google.com/mail/u/1/#inbox/"]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">LinkIcon6NameAndPath=#@#\youtube-1.png</span><br><span class="line">HoverIcon6NameAndPath=#@#\youtube-2.png</span><br><span class="line">Link6Text=youtube</span><br><span class="line">LinkLocationPath6=!Execute ["https://www.youtube.com/"]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">LinkIcon7NameAndPath=#@#\terminal-1.png</span><br><span class="line">HoverIcon7NameAndPath=#@#\terminal-2.png</span><br><span class="line">Link7Text=youtube</span><br><span class="line">LinkLocationPath7=!Execute ["wt"]</span><br><span class="line"></span><br><span class="line">LinkIcon8NameAndPath=#@#\music.png</span><br><span class="line">HoverIcon8NameAndPath=#@#\music-1.png</span><br><span class="line">Link8Text=kugou</span><br><span class="line">LinkLocationPath8=!Execute ["D:\install\kugou\KGMusic\KuGou.exe"]</span><br><span class="line"></span><br><span class="line">LinkIcon9NameAndPath=#@#\bi-1.png</span><br><span class="line">HoverIcon9NameAndPath=#@#\bi.png</span><br><span class="line">Link9Text=bilibili</span><br><span class="line">LinkLocationPath9=!Execute ["https://www.bilibili.com/"]</span><br><span class="line"></span><br><span class="line">LinkIcon10NameAndPath=#@#\wechat.png</span><br><span class="line">HoverIcon10NameAndPath=#@#\wechat-1.png</span><br><span class="line">Link10Text=wechat</span><br><span class="line">LinkLocationPath10=!Execute ["D:\install\wechat\WeChat.exe"]</span><br><span class="line"></span><br><span class="line">LinkIcon11NameAndPath=#@#\note.png</span><br><span class="line">HoverIcon11NameAndPath=#@#\note-1.png</span><br><span class="line">Link11Text=joplin</span><br><span class="line">LinkLocationPath11=!Execute ["C:\Program Files\Joplin\Joplin.exe"]</span><br><span class="line"></span><br><span class="line">ClashImgPath1=#@#\vpn-3.png</span><br><span class="line">ClashImgPath2=#@#\vpn-1.png</span><br><span class="line">ClashLinkText=clash</span><br><span class="line">ClashAppPath=!Execute ["D:\OperationTools\Clash.for.Windows-0.20.39-win\Clash for Windows"]</span><br><span class="line"></span><br><span class="line">VmwareImgPath1=#@#\vm-2.png</span><br><span class="line">VmwareImgPath2=#@#\vm-2.png</span><br><span class="line">VmwareLinkText=vmware</span><br><span class="line">VmwareAppPath=!Execute ["D:\installsoft\VM\vmware.exe"]</span><br><span class="line"></span><br><span class="line">XtermImgPath1=#@#\xterm-1.png</span><br><span class="line">XtermImgPath2=#@#\xterm-2.png</span><br><span class="line">XtermLinkText=vmware</span><br><span class="line">XtermAppPath=!Execute ["D:\install\Xterm\MobaXterm\MobaXterm"]</span><br><span class="line"></span><br><span class="line">TeleImgPath1=#@#\telegram.png</span><br><span class="line">TeleImgPath2=#@#\telegram-2.png</span><br><span class="line">TeleLinkText=telegram</span><br><span class="line">TeleAppPath=!Execute ["D:\install\telegram\Telegram Desktop\Telegram.exe"]</span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p>打开 C:\Users\Administrator\Documents\Rainmeter\Skins\Welfare\Links</p>
+</li>
+<li><p>这是桌面图标的配置文件</p>
+</li>
+<li><p>代码解析：</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[Rainmeter]</span><br><span class="line">Update=-1</span><br><span class="line">Author=Morteza Nasirivand</span><br><span class="line">DynamicWindowSize=1</span><br><span class="line">AccurateText=1</span><br><span class="line"></span><br><span class="line">[Metadata]</span><br><span class="line">Name=</span><br><span class="line">Author=</span><br><span class="line">Information=</span><br><span class="line">License=</span><br><span class="line">Version=</span><br><span class="line"></span><br><span class="line">;NOTES:</span><br><span class="line">;If you are not familiar with Rainmeter from earlier,please don't edit anything!</span><br><span class="line">;It's too complicated and sensitive,if you don't know what you doing!</span><br><span class="line"></span><br><span class="line">[Variables]</span><br><span class="line">@include=#@#Variables.inc</span><br><span class="line">IconTimeWaiting=4</span><br><span class="line">TextTimeWaiting=8</span><br><span class="line">Size1=0</span><br><span class="line">Size2=0</span><br><span class="line">Size3=0</span><br><span class="line">Size4=0</span><br><span class="line">Size5=0</span><br><span class="line">Size6=0</span><br><span class="line">Size7=0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">;这里设置底部的水平线 SolidColor=12,201,255 颜色</span><br><span class="line">;Meter=Image: 这个参数指定了元素类型，即一个图像元素，尽管在这种情况下它被用来表示一条线</span><br><span class="line">;X=20 和 Y=68: 定义了线条在屏幕上的位置</span><br><span class="line">;W=60 和 H=3: 这些参数定义了线条的宽度和高度</span><br><span class="line">[MeterLine]</span><br><span class="line">Meter=Image</span><br><span class="line">X=20</span><br><span class="line">Y=68</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=12,201,255</span><br><span class="line"></span><br><span class="line">[MeterLine2]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=218,165,32</span><br><span class="line"></span><br><span class="line">[MeterLine3]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=65,105,225</span><br><span class="line"></span><br><span class="line">[MeterPython]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=218, 112, 214</span><br><span class="line"></span><br><span class="line">[MeterLine5]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=0,100,0</span><br><span class="line"></span><br><span class="line">[MeterLine6]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=178, 34, 34</span><br><span class="line"></span><br><span class="line">[MeterLine7]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=50,205,50</span><br><span class="line"></span><br><span class="line">[MeterLine8]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=48, 25, 52</span><br><span class="line"></span><br><span class="line">[MeterLine9]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=255, 127, 80</span><br><span class="line"></span><br><span class="line">[MeterLine10]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=34, 139, 34</span><br><span class="line"></span><br><span class="line">;joplin</span><br><span class="line">[MeterLine11]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=255,255,0</span><br><span class="line"></span><br><span class="line">[MeterClashLine]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=240, 128, 128</span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line">;这里设置图标效果</span><br><span class="line">;变量都保存在Variables.inc 中、开头使用 @include=#@#Variables.inc 调用了</span><br><span class="line">;ImageName=#LinkIcon1NameAndPath# 显示的图片、图片路径存在变量LinkIcon1NameAndPath 中</span><br><span class="line">;LeftMouseUpAction="#LinkLocationPath1#" 定义了当用户在图像上执行左键点击时所执行的动作</span><br><span class="line">;MouseOverAction  鼠标放在图片上的效果</span><br><span class="line">;MouseLeaveAction 鼠标离开图片的效果</span><br><span class="line">;Meter=Image: 这个参数告诉Rainmeter这个元素是一个图像。</span><br><span class="line">;X=40 和 Y=30: 定义了图像在屏幕上的位置。X是水平位置，Y是垂直位置</span><br><span class="line">;W=25: 定义了图像的宽度。</span><br><span class="line">;AntiAlias=1: 这个参数启用了图像的抗锯齿功能，使图像边缘更加平滑</span><br><span class="line">;PreserveAspectRatio=1: 这个参数设置为1时，保持图像的长宽比，以确保图像在改变大小时不会失真</span><br><span class="line">;Group=Icons: 这个参数将该图像元素分组到一个名为 "Icons" 的组中，这有助于管理和布局Rainmeter皮肤中的元素。</span><br><span class="line"></span><br><span class="line">;打开我的电脑</span><br><span class="line">[MeterIcon1]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon1NameAndPath#</span><br><span class="line">X=40</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath1#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon1 ImageAlpha 150][!UpdateMeter MeterIcon1][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon1 ImageAlpha 255][!UpdateMeter MeterIcon1][!Redraw]</span><br><span class="line"></span><br><span class="line">;图标凸起效果</span><br><span class="line">MouseOverAction=[!SetOption MeterIcon1 ImageName "#HoverIcon1NameAndPath#"][!SetOption MeterIcon1 Y "15"][!SetOption MeterIcon1 W "50"][!UpdateMeter MeterIcon1][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon1 ImageName "#LinkIcon1NameAndPath#"][!SetOption MeterIcon1 Y "30"][!SetOption MeterIcon1 W "30"][!UpdateMeter MeterIcon1][!Redraw]</span><br><span class="line"></span><br><span class="line">;google</span><br><span class="line">[MeterIcon2]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon2NameAndPath#</span><br><span class="line">X=100</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath2#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon2 ImageAlpha 150][!UpdateMeter MeterIcon2][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon2 ImageAlpha 255][!UpdateMeter MeterIcon2][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon2 ImageName "#HoverIcon2NameAndPath#"][!SetOption MeterIcon2 Y "15"][!SetOption MeterIcon2 W "50"][!UpdateMeter MeterIcon2][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon2 ImageName "#LinkIcon2NameAndPath#"][!SetOption MeterIcon2 Y "30"][!SetOption MeterIcon2 W "30"][!UpdateMeter MeterIcon2][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon3]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon3NameAndPath#</span><br><span class="line">X=156</span><br><span class="line">Y=27</span><br><span class="line">W=38</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath3#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon3 ImageAlpha 150][!UpdateMeter MeterIcon3][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon3 ImageAlpha 255][!UpdateMeter MeterIcon3][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon3 ImageName "#HoverIcon3NameAndPath#"][!SetOption MeterIcon3 Y "15"][!SetOption MeterIcon3 W "50"][!UpdateMeter MeterIcon3][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon3 ImageName "#LinkIcon3NameAndPath#"][!SetOption MeterIcon3 Y "27"][!SetOption MeterIcon3 W "38"][!UpdateMeter MeterIcon3][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterPychrm]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#PythonImgPath1#</span><br><span class="line">X=215</span><br><span class="line">Y=25</span><br><span class="line">W=36</span><br><span class="line">LeftMouseUpAction="#PythonAppPath#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">MouseOverAction=[!SetOption MeterPychrm ImageName "#PythonImgPath2#"][!SetOption MeterPychrm Y "15"][!SetOption MeterPychrm W "50"][!UpdateMeter MeterPychrm][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterPychrm ImageName "#PythonImgPath1#"][!SetOption MeterPychrm Y "25"][!SetOption MeterPychrm W "38"][!UpdateMeter MeterPychrm][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon5]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon5NameAndPath#</span><br><span class="line">X=272</span><br><span class="line">Y=30</span><br><span class="line">W=35</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath5#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon5 ImageAlpha 150][!UpdateMeter MeterIcon5][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon5 ImageAlpha 255][!UpdateMeter MeterIcon5][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon5 ImageName "#HoverIcon5NameAndPath#"][!SetOption MeterIcon5 Y "15"][!SetOption MeterIcon5 W "50"][!UpdateMeter MeterIcon5][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon5 ImageName "#LinkIcon5NameAndPath#"][!SetOption MeterIcon5 Y "30"][!SetOption MeterIcon5 W "35"][!UpdateMeter MeterIcon5][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon6]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon6NameAndPath#</span><br><span class="line">X=340</span><br><span class="line">Y=30</span><br><span class="line">W=25</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath6#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon6 ImageAlpha 150][!UpdateMeter MeterIcon6][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon6 ImageAlpha 255][!UpdateMeter MeterIcon6][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon6 ImageName "#HoverIcon6NameAndPath#"][!SetOption MeterIcon6 Y "15"][!SetOption MeterIcon6 W "50"][!UpdateMeter MeterIcon6][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon6 ImageName "#LinkIcon6NameAndPath#"][!SetOption MeterIcon6 Y "30"][!SetOption MeterIcon6 W "30"][!UpdateMeter MeterIcon6][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon7]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon7NameAndPath#</span><br><span class="line">X=400</span><br><span class="line">Y=30</span><br><span class="line">W=25</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath7#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon7 ImageAlpha 150][!UpdateMeter MeterIcon7][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon7 ImageAlpha 255][!UpdateMeter MeterIcon7][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon7 ImageName "#HoverIcon7NameAndPath#"][!SetOption MeterIcon7 Y "15"][!SetOption MeterIcon7 W "50"][!UpdateMeter MeterIcon7][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon7 ImageName "#LinkIcon7NameAndPath#"][!SetOption MeterIcon7 Y "30"][!SetOption MeterIcon7 W "30"][!UpdateMeter MeterIcon7][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon8]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon8NameAndPath#</span><br><span class="line">X=460</span><br><span class="line">Y=30</span><br><span class="line">W=25</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath8#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon8 ImageAlpha 150][!UpdateMeter MeterIcon8][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon8 ImageAlpha 255][!UpdateMeter MeterIcon8][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon8 ImageName "#HoverIcon8NameAndPath#"][!SetOption MeterIcon8 Y "15"][!SetOption MeterIcon8 W "50"][!UpdateMeter MeterIcon8][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon8 ImageName "#LinkIcon8NameAndPath#"][!SetOption MeterIcon8 Y "30"][!SetOption MeterIcon8 W "30"][!UpdateMeter MeterIcon8][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon9]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon9NameAndPath#</span><br><span class="line">X=520</span><br><span class="line">Y=30</span><br><span class="line">W=25</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath9#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon9 ImageAlpha 150][!UpdateMeter MeterIcon9][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon9 ImageAlpha 255][!UpdateMeter MeterIcon9][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon9 ImageName "#HoverIcon9NameAndPath#"][!SetOption MeterIcon9 Y "15"][!SetOption MeterIcon9 W "50"][!UpdateMeter MeterIcon9][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon9 ImageName "#LinkIcon9NameAndPath#"][!SetOption MeterIcon9 Y "30"][!SetOption MeterIcon9 W "30"][!UpdateMeter MeterIcon9][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon10]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon10NameAndPath#</span><br><span class="line">X=580</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath10#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line"></span><br><span class="line">;透明</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon10 ImageAlpha 150][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon10 ImageAlpha 255][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon10 ImageName "#HoverIcon10NameAndPath#"][!SetOption MeterIcon10 Y "15"][!SetOption MeterIcon10 W "50"][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon10 ImageName "#LinkIcon10NameAndPath#"][!SetOption MeterIcon10 Y "30"][!SetOption MeterIcon10 W "30"][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line"></span><br><span class="line">;joplin</span><br><span class="line">[MeterIcon11]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon11NameAndPath#</span><br><span class="line">X=640</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath11#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line"></span><br><span class="line">;透明</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon10 ImageAlpha 150][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon10 ImageAlpha 255][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line"></span><br><span class="line">;图标变大变小的效果</span><br><span class="line">MouseOverAction=[!SetOption MeterIcon11 ImageName "#HoverIcon11NameAndPath#"][!SetOption MeterIcon11 Y "15"][!SetOption MeterIcon11 W "50"][!UpdateMeter MeterIcon11][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon11 ImageName "#LinkIcon11NameAndPath#"][!SetOption MeterIcon11 Y "30"][!SetOption MeterIcon11 W "30"][!UpdateMeter MeterIcon11][!Redraw]</span><br><span class="line"></span><br><span class="line">;clash</span><br><span class="line">[MeterClash]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#ClashImgPath1#</span><br><span class="line">X=700</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">;LeftMouseUpAction 鼠标左键点击的动作-运行exe</span><br><span class="line">LeftMouseUpAction="#ClashAppPath#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line"></span><br><span class="line">;透明</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon10 ImageAlpha 150][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon10 ImageAlpha 255][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterClash ImageName "#ClashImgPath2#"][!SetOption MeterClash Y "15"][!SetOption MeterClash W "50"][!UpdateMeter MeterClash][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterClash ImageName "#ClashImgPath1#"][!SetOption MeterClash Y "30"][!SetOption MeterClash W "30"][!UpdateMeter MeterClash][!Redraw]</span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line">;-------------------------------------------------------------</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>根据上面的代码，更改自己需要的链接和图标路径即可， ；号为注释</strong></p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="把rainmeter-软件的开机自启关闭、使用windows的任务计划程序来开机后在启动、不然会导致开机速度很慢"><a href="#把rainmeter-软件的开机自启关闭、使用windows的任务计划程序来开机后在启动、不然会导致开机速度很慢" class="headerlink" title="把rainmeter 软件的开机自启关闭、使用windows的任务计划程序来开机后在启动、不然会导致开机速度很慢"></a>把<code>rainmeter</code> 软件的开机自启关闭、使用windows的<code>任务计划程序</code>来开机后在启动、不然会导致开机速度很慢</h3><ol>
+<li>打开 任务计划程序</li>
+</ol>
+<ul>
+<li>win + R</li>
+<li>输入：taskschd.msc<br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r1.7p6ws6lt5.avif" alt="r1"></li>
+</ul>
+<ol start="2">
+<li><p>创建基本任务<br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r2.9dcv0gameq.avif" alt="r2"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r3.1sexw93t9v.avif" alt="r3"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r4.5mnpf7lr79.avif" alt="r4"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r5.3rb4ml9bli.avif" alt="r5"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r6.8ojlgfn3ef.avif" alt="r6"></p>
+</li>
+<li><p>保存后、到任务这里右键属性（如果保存后直接跳到属性就不用另外点击了）<br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r7.8dwrna7v95.avif" alt="r7"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r8.3goatfu3ga.avif" alt="r8"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r9.13loc8ga9o.avif" alt="r9"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r10.99t92qhjp9.avif" alt="r10"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r11.7egoa4543j.avif" alt="r11"></p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>干货</category>
+      </categories>
+      <tags>
+        <tag>windows</tag>
+        <tag>rainmeter</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vmware虚拟机网络配置</title>
+    <url>/looking/300f2b.html</url>
+    <content><![CDATA[<h2 id="vmwarme-网络类型"><a href="#vmwarme-网络类型" class="headerlink" title="vmwarme 网络类型"></a>vmwarme 网络类型</h2><blockquote>
+<p>VMware虚拟机有三种网络模式，分别是<strong>Bridged(桥接模式)<strong>、</strong>NAT(网络地址转换模式)<strong>、</strong>Host-only(主机模式)</strong><br>VMware workstation安装好之后会多出两个网络连接,分别是:<br><strong>VMware Network Adapter VMnet1</strong><br><strong>VMware Network Adapter VMnet8</strong><br>上面这两个是可以在主机的网络连接中可以查看到的，<br>还有一个是<strong>VMnet0</strong>，可以在virtual network editor中看到<br>这三个虚拟网络都是VMware安装好之后自动生成的，不需要手动修改。</p>
+<blockquote>
+<p>其中VMnet0用于Bridged模式，VMnet1用于Host-only模式，Vmnet8用于NAT模式。VMnet8和VMnet1提供DHCP服务，VMnet0默认则不提供。</p>
+</blockquote>
+</blockquote>
+<p><strong>图一</strong><br><img src="https://pic.imgdb.cn/item/667eddecd9c307b7e93831e0.png" alt="bridged" title="图一"></p>
+<h2 id="1-Bridged-桥接模式-VMnet0"><a href="#1-Bridged-桥接模式-VMnet0" class="headerlink" title="1. Bridged 桥接模式 (VMnet0)"></a>1. Bridged 桥接模式 (VMnet0)</h2><blockquote>
+<p>在这种模式下，VMWare虚拟出来的操作系统就像是局域网中的一台<strong>独立的主机</strong>，它可以访问网内任何一台机器，你需要手工为虚拟系统配置IP地址、子网掩码，而且还要和宿主机器处于同网段，这样虚拟系统才能和宿主机器进行通信，虚拟系统和宿主机器的关系，就像连接在同一个Hub上的两台电脑。从网络技术上理解相当于在宿主机前端加设了一个虚拟交换机，然后宿主机和所有虚拟机共享这个交换机。</p>
+</blockquote>
+<ul>
+<li>如果你想利用VMWare在局域网内新建一个虚拟服务器，为局域网用户提供网络服务，就应该选择桥接模式。</li>
+</ul>
+<h3 id="1-1-桥接模式下的网络设置"><a href="#1-1-桥接模式下的网络设置" class="headerlink" title="1.1 桥接模式下的网络设置"></a>1.1 桥接模式下的网络设置</h3><blockquote>
+<ol>
+<li>虚拟机网络设置：桥接模式（选择图一中的桥接模式）</li>
+<li>查看本机的以太网网络设置：ipconfig </li>
+<li>配置虚拟机网络：<ul>
+<li>vim /etc/sysconfig/network-scripts/ifcfg-eth0</li>
+<li>ip地址和本机同一个网段</li>
+<li>网关地址、子网掩码、DNS和本机一样即可</li>
+<li>重启虚拟机网卡</li>
+<li>测试：ping 本机或外网</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<h2 id="2-NAT-网络地址转换模式-VMnet8"><a href="#2-NAT-网络地址转换模式-VMnet8" class="headerlink" title="2. NAT 网络地址转换模式 (VMnet8)"></a>2. NAT 网络地址转换模式 (VMnet8)</h2><blockquote>
+<p>NAT（Network Address Translation）网络地址转换，是一种网络技术，它允许一个网络中的计算机通过一个公共网络（如互联网）来通信。<br>NAT技术通过将一个私有IP地址转换为一个公共IP地址来实现通信。<br>NAT技术将一个私有IP地址转换为一个公共IP地址来实现通信。<br>这里的虚拟机NET模式：</p>
+<blockquote>
+<p>就是让虚拟系统借助NAT的功能，通过宿主机所在的网络来访问公网。在这种模式下宿主机成为双网卡主机，同时参与现有的宿主局域网和新建的虚拟局域网，但由于加设了一个虚拟的NAT服务器，使得虚拟局域网内的虚拟机在对外访问时，使用的则是宿主机的IP地址，这样从外部网络来看，只能看到宿主机，完全看不到新建的虚拟局域网。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>采用NAT模式最大的优势是虚拟系统接入互联网非常简单，你不需要进行任何其他的配置，只需要宿主机器能访问互联网即可。</p>
+</blockquote>
+<ul>
+<li>如果你想利用VMWare安装一个新的虚拟系统，在虚拟系统中不用进行任何手工配置就能直接访问互联网，建议你采用NAT模式。</li>
+</ul>
+<h3 id="2-1-NAT模式下的网络设置"><a href="#2-1-NAT模式下的网络设置" class="headerlink" title="2.1 NAT模式下的网络设置"></a>2.1 NAT模式下的网络设置</h3><blockquote>
+<ol>
+<li>检查宿主机的VMware DHCP Service 和VMwareNAT Service两个服务是否启动：<br><img src="https://pic.imgdb.cn/item/667ee2b1d9c307b7e94130f2.png" alt="任务管理器"></li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>虚拟机网络选择设置：NAT模式（选择图一中的NAT模式）</li>
+<li>虚拟机中网络配置：因为NAT有DHCP服务，所以我们只需要将BOOTPROTO参数设置为dhcp就可以了，由dhcp服务器分配IP地址。</li>
+<li>注意如果虚拟机中网卡配置中有 <strong>ONBOOT</strong> 参数为no，那么虚拟机网卡不会自动启动，需要手动启动网卡、可以直接注销掉</li>
+</ol>
+</blockquote>
+<ul>
+<li><p>默认情况下VMware和虚拟机的配置都不需要修改，所以NAT模式是最简单的</p>
+</li>
+<li><p>默认情况下会自动分配，当然你也也可以自行配置网段和网关、如下图：<br><img src="https://pic.imgdb.cn/item/667ee8a1d9c307b7e94ab6ac.png" alt="配置自定义net网络"></p>
+</li>
+<li><p><strong>注意</strong>：如果将本机的<strong>VMnet8</strong>网卡禁掉的话就无法在本机远程（ssh）到虚拟主机了、但是可以ping通<br>· <em>这就是NET模式、利用虚拟的NET设备以及虚拟的DHCP服务器来使虚拟机连接外网、而VMnet8虚拟网卡是用来与虚拟机通信的</em></p>
+</li>
+</ul>
+<h2 id="3-Host-only-仅主机模式-VMnet1"><a href="#3-Host-only-仅主机模式-VMnet1" class="headerlink" title="3. Host-only 仅主机模式 (VMnet1)"></a>3. Host-only 仅主机模式 (VMnet1)</h2><ul>
+<li>在某些特殊的网络调试环境中，要求将真实环境和虚拟环境隔离开，这时你就可采用host-only模式，在这种模式下宿主机上的所有虚拟机是可以相互通信的，但虚拟机和真实的网络是被隔离开的。</li>
+<li>在这种模式下新建了一个由所有虚拟机与宿主机所构成的局域网，但该局域网与宿主机本身所处的现有局域网是相互独立的，如果不做额外路由设置，这两个局域网之间不会连通，因此新建的局域网可以认为是一个单独从属于当前宿主机的私有网络，其成员为当前宿主机和相关的所有虚拟机。</li>
+<li>从网络技术上讲相当于为宿主机增添了一个虚拟网卡，让宿主机变成一台双网卡主机（宿主网卡+虚拟网卡）。同时在宿主机后端加设一个虚拟交换机，让宿主机和所有虚拟机构成另一个虚拟的局域网。由于具备双网卡，宿主机可同时参与两个局域网（现有的宿主局域网+新建的虚拟局域网），只不过缺省情况下两个局域网不连通。</li>
+<li><strong>如果你想利用VMWare创建一个与网内其他机器相隔离的虚拟系统，进行某些特殊的网络调试工作，可以选择host-only模式。</strong></li>
+</ul>
+<h3 id="3-1-Host-only模式下的网络设置"><a href="#3-1-Host-only模式下的网络设置" class="headerlink" title="3.1 Host-only模式下的网络设置"></a>3.1 Host-only模式下的网络设置</h3><ul>
+<li>Host-only模式下是由VMnet1网卡负责的，VMnet1提供DHCP服务，所以虚拟机中我们不需手动设定IP<blockquote>
+<ol>
+<li>虚拟机网络设置：Host-only模式即可（选择图一中的Host-only模式）</li>
+<li>配置好后主机就能ping通虚拟机，但虚拟机ping主机时就要注意了，不是去ping宿主网卡产生的IP地址，而是由虚拟网卡VMnet1产生的IP地址，宿主机命令行中输入ipconfig就可看到VMnet1的产生的IP地址</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<p><a href="https://blog.51cto.com/u_15169172/2710721">可参考: https://blog.51cto.com/u_15169172/2710721</a></p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>vmware网络</tag>
       </tags>
   </entry>
   <entry>
@@ -1284,153 +1612,57 @@
       </tags>
   </entry>
   <entry>
-    <title>linux路由表详解-追踪路由</title>
-    <url>/looking/996ca674.html</url>
-    <content><![CDATA[
-    <p class="centered-text">linux 路由表详解</p>
-
-
-
-<h1 id="通过-route-命令查看-Linux-内核的路由表："><a href="#通过-route-命令查看-Linux-内核的路由表：" class="headerlink" title="通过 route 命令查看 Linux 内核的路由表："></a><code>通过 route 命令查看 Linux 内核的路由表：</code></h1><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$route</span></span><br><span class="line">Kernel IP routing table</span><br><span class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</span><br><span class="line">default         _gateway        0.0.0.0         UG    0      0        0 p5p1</span><br><span class="line">default         _gateway        0.0.0.0         UG    100    0        0 em1</span><br><span class="line">10.150.0.0      10.150.54.126   255.255.0.0     UG    0      0        0 em2</span><br><span class="line">10.150.54.0     0.0.0.0         255.255.255.128 U     0      0        0 em2</span><br><span class="line">link-local      0.0.0.0         255.255.0.0     U     1002   0        0 p5p1</span><br><span class="line">link-local      0.0.0.0         255.255.0.0     U     1004   0        0 em1</span><br><span class="line">link-local      0.0.0.0         255.255.0.0     U     1005   0        0 em2</span><br><span class="line">172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0</span><br><span class="line">172.18.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-de7a849d77f1</span><br><span class="line">172.19.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-9bc222159381</span><br><span class="line">172.24.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-2d803453c335</span><br><span class="line">172.33.1.0      _gateway        255.255.255.0   UG    0      0        0 em1</span><br><span class="line">172.33.9.0      0.0.0.0         255.255.255.0   U     100    0        0 em1</span><br><span class="line">172.33.137.0    0.0.0.0         255.255.255.0   U     0      0        0 p5p1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="variable">$route</span> -n</span><br><span class="line">Kernel IP routing table</span><br><span class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</span><br><span class="line">0.0.0.0         172.11.120.254  0.0.0.0         UG    0      0        0 p5p1</span><br><span class="line">0.0.0.0         172.32.8.254    0.0.0.0         UG    100    0        0 em1</span><br><span class="line">10.150.0.0      10.150.54.126   255.255.0.0     UG    0      0        0 em2</span><br><span class="line">10.150.54.0     0.0.0.0         255.255.255.128 U     0      0        0 em2</span><br><span class="line">169.254.0.0     0.0.0.0         255.255.0.0     U     1002   0        0 p5p1</span><br><span class="line">169.254.0.0     0.0.0.0         255.255.0.0     U     1004   0        0 em1</span><br><span class="line">169.254.0.0     0.0.0.0         255.255.0.0     U     1005   0        0 em2</span><br><span class="line">172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0</span><br><span class="line">172.18.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-de7a849d77f1</span><br><span class="line">172.19.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-9bc222159381</span><br><span class="line">172.24.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-2d803453c335</span><br><span class="line">172.33.1.0      172.32.8.254    255.255.255.0   UG    0      0        0 em1</span><br><span class="line">172.33.9.0      0.0.0.0         255.255.255.0   U     100    0        0 em1</span><br><span class="line">172.33.137.0    0.0.0.0         255.255.255.0   U     0      0        0 p5p1</span><br></pre></td></tr></tbody></table></figure>
-<h2 id="各列字段说明："><a href="#各列字段说明：" class="headerlink" title="各列字段说明："></a><code>各列字段说明：</code></h2><table>
-<thead>
-<tr>
-<th>列</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Destination</td>
-<td>目标网络网关或目标主机。Destination 为 default（<code>0.0.0.0</code>）时，表示这个是默认网关，所有数据都发到这个网关（这里是<code>172.11.120.254</code>和<code>172.32.8.254</code>）</td>
-</tr>
-<tr>
-<td>Gateway</td>
-<td>本机的网关地址，<code>0.0.0.0</code> 表示当前记录对应的 Destination 跟本机在同一个网段，通信时不需要经过网关；如不在同一个网段，可借助相关路由跳过去，如这里借助<code>10.150.54.126</code>网关跳到<code>10.150.0.0</code> 段的网络</td>
-</tr>
-<tr>
-<td>Genmask</td>
-<td>目标网络(Destination) 字段的网络掩码，Destination 是主机时需要设置为 255.255.255.255，是默认路由时会设置为 0.0.0.0</td>
-</tr>
-<tr>
-<td>Flags</td>
-<td>标记，含义参考表格后面的解释</td>
-</tr>
-<tr>
-<td>Metric</td>
-<td>路由距离，到达指定网络所需的中转数，是大型局域网和广域网设置所必需的 （不在Linux内核中使用。）</td>
-</tr>
-<tr>
-<td>Ref</td>
-<td>路由项引用次数 （不在Linux内核中使用。）</td>
-</tr>
-<tr>
-<td>Use</td>
-<td>此路由项被路由软件查找的次数</td>
-</tr>
-<tr>
-<td>Iface</td>
-<td>网卡名字，例如 <code>em1</code></td>
-</tr>
-</tbody></table>
-<p><code>Flags 含义：</code></p>
-<blockquote>
-<p>U 路由是活动的<br>H 目标是个主机<br>G 需要经过网关<br>R 恢复动态路由产生的表项<br>D 由路由的后台程序动态地安装<br>M 由路由的后台程序修改<br>! 拒绝路由</p>
-</blockquote>
-<p><code>如何看这个路由表：</code></p>
-<blockquote>
-<p>从右往左看：比如第三行： <code>10.150.0.0 | 10.150.54.126  | 255.255.0.0   |  UG |   0   |   0    |  0 | em2</code><br>流量数据从本机的网卡<code>em2</code>出去到(交换机)网关<code>10.150.54.126</code>，借助这个网关将数据送往目标网络地址(网关)<code>10.150.0.0</code><br>其中要明确地址<code>10.150.54.126</code> 与 <code>10.150.0.0</code> 是能通讯的、否则流量是过不去的</p>
-</blockquote>
-<h2 id="ip-route-show查看"><a href="#ip-route-show查看" class="headerlink" title="ip route show查看"></a><code>ip route show查看</code></h2><blockquote>
-<p>“ip route show” 是 Linux 中的命令，用于显示计算机上的路由表。路由表记录了计算机如何将数据包发送到网络中的其他计算机</p>
-</blockquote>
-<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$ip</span> route show</span><br><span class="line">default via 172.33.137.254 dev p5p1</span><br><span class="line">default via 172.33.9.254 dev em1 proto static metric 100</span><br><span class="line">10.150.0.0/16 via 10.150.54.126 dev em2</span><br><span class="line">10.15.54.0/25 dev em2 proto kernel scope <span class="built_in">link</span> src 10.15.54.10</span><br><span class="line">169.254.0.0/16 dev p5p1 scope <span class="built_in">link</span> metric 1002</span><br><span class="line">172.3.1.0/24 via 172.13.9.254 dev em1</span><br><span class="line">172.3.1.0/24 dev em1 proto kernel scope <span class="built_in">link</span> src 172.3.1.12 metric 100</span><br><span class="line">172.2.136.0/24 dev p5p1 proto kernel scope <span class="built_in">link</span> src 172.2.136.12</span><br></pre></td></tr></tbody></table></figure>
-<blockquote>
-<p>上面路由记录的格式通常都是这样的：<br>&lt;目的地&gt; via &lt;网关&gt; dev &lt;接口网卡&gt; proto &lt;协议&gt; src &lt;源地址或本机地址&gt; &lt;附加信息&gt;</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>列</th>
-<th>解析</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&lt;目的地&gt;</td>
-<td><code>目的地网络网关或主机</code>，可以是具体的 IP 地址（如 <code>10.15.54.50</code>）、网络地址 （如<code>10.15.54.0/25</code>）或 default 等。default 会在没有其他符合的路由条目时使用；</td>
-</tr>
-<tr>
-<td>via &lt;网关&gt;</td>
-<td>可选字段，指的是到达<code>目的地址</code>需要使用的<code>网关的 IP 地址</code>。<code>发往</code>这个路由条目对应的目的地的数据包，都会把这个<code>网关设置为下一跳</code>，经由此<code>&lt;via&gt;</code>发往最终目的地；比如：<code>em1</code>网卡 通过 网关<code>via 172.13.9.254</code>跳到 <code>172.3.1.0/24</code>网段 ，这样就实现了不同网段之间的通信</td>
-</tr>
-<tr>
-<td>dev &lt;接口网卡&gt;</td>
-<td>要发往本条目对应目的地时所需要使用的网络接口（设备网卡）；</td>
-</tr>
-<tr>
-<td>proto &lt;协议&gt;</td>
-<td>添加本条条目的协议。常见的值有：<code>kernel</code>（本条目由内核添加）、<code>static</code>（手动添加）、<code>dhcp</code>（通过 DHCP 添加）、<code>boot</code> （在启动时添加）、<code>redirect</code> （由 ICMP 重定向添加）。此外，该值还可以是 <code>bgp</code>、<code>ospf</code> 这类动态路由协议。该值可能是整数值或者一个字符串值，字符串值都可以在 <code>/etc/iproute2/rt_protos</code> 中找到；</td>
-</tr>
-<tr>
-<td>src &lt;源地址&gt;</td>
-<td>在使用本条路由，向目的地发送数据包时所需采用的 IP 地址；</td>
-</tr>
-<tr>
-<td>&lt;附加信息&gt;</td>
-<td>代表多个可选项，常见的有：见下面</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>&lt;附加信息&gt;：</p>
-<ul>
-<li>scope <scope>：定义这条路由的范围:<ul>
-<li><code>global</code> 表示有网关的单播（unicast）路由</li>
-<li><code>link</code> 表示直连的单播或广播（broadcast）路由</li>
-<li><code>host</code> 表示本地（local）路由。该值可能是一个整数值或者是字符串值，字符串值应该能在 <code>/etc/iproute2/rt_scopes</code> 中找到</li>
+    <title>windows和office套餐激活工具</title>
+    <url>/looking/41ec75e8.html</url>
+    <content><![CDATA[<h1 id="此文章分为两部分："><a href="#此文章分为两部分：" class="headerlink" title="此文章分为两部分："></a>此文章分为两部分：</h1><ul>
+<li>Mirosoft套餐激活工具</li>
+<li>Windows系统激活工具</li>
 </ul>
-</scope></li>
-<li>metric &lt;整数&gt;：表示路由的优先级，数字越小优先级越高。<code>最小值为 0</code> ，<code>最大值为 65535</code></li>
-<li>table &lt;表名/数字&gt;：如果一条路由不属于 main 表，则会在这里指出该路由所属的路由表</li>
-</ul>
-</blockquote>
-<hr>
-<hr>
-<h2 id="路由追踪：traceroute"><a href="#路由追踪：traceroute" class="headerlink" title="路由追踪：traceroute <ip地址>"></a>路由追踪：traceroute &lt;ip地址&gt;</h2><blockquote>
-<p>该命令用于显示数据包到主机间的路径。</p>
-</blockquote>
-<p><code>使用详解：</code></p>
-<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$traceroute</span> xiaoxin123.top</span><br><span class="line"></span><br><span class="line">traceroute to xiaoxin123.top (198.181.38.205), 30 hops max, 60 byte packets</span><br><span class="line"> 1  10.124.224.22 (10.124.224.22)  1.228 ms 11.63.120.22 (11.63.120.22)  0.990 ms 11.63.116.22 (11.63.116.22)  0.871 ms</span><br><span class="line"> 2  11.63.116.121 (11.63.116.121)  1.287 ms 11.63.116.77 (11.63.116.77)  1.233 ms 11.63.116.117 (11.63.116.117)  1.267 ms</span><br><span class="line"> 3  11.48.239.69 (11.48.239.69)  0.929 ms 11.88.168.21 (11.88.168.21)  5.739 ms 11.48.239.117 (11.48.239.117)  0.909 ms</span><br><span class="line"> 4  45.112.220.37 (45.112.220.37)  1.256 ms 45.112.220.25 (45.112.220.25)  1.291 ms 45.112.220.77 (45.112.220.77)  1.971 ms</span><br><span class="line"> 5  157.119.193.86 (157.119.193.86)  10.308 ms 117.49.54.74 (117.49.54.74)  35.224 ms 117.49.54.102 (117.49.54.102)  8.936 ms</span><br><span class="line"> 6  11.94.143.102 (11.94.143.102)  9.224 ms  7.991 ms 117.49.37.246 (117.49.37.246)  7.707 ms</span><br><span class="line"> 7  * * *</span><br><span class="line"> 8  183.2.182.113 (183.2.182.113)  10.336 ms  9.631 ms 58.61.162.161 (58.61.162.161)  7.523 ms</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 数字（第几条）   ip（当前跳的所在地址）   三个时间（RTT，也就是往返时延）</span></span><br><span class="line"><span class="comment"># 显示* * * 的情况 ：</span></span><br><span class="line">  &gt; 可能是路由器禁止了ICMP数据包</span><br><span class="line">  &gt;如果从某跳开始所有的时间都成了星号，即超时，则网络故障很有可能就出现在了这一跳</span><br></pre></td></tr></tbody></table></figure>
-<p><code>相关命令参数:</code></p>
-<blockquote>
-<p>traceroute [-dFlnrvx][-f&lt;存活数值&gt;][-g&lt;网关&gt;…][-i&lt;网络界面&gt;][-m&lt;存活数值&gt;][-p&lt;通信端口&gt;][-s&lt;来源地址&gt;][-t&lt;服务类型&gt;][-w&lt;超时秒数&gt;][主机名称或IP地址][数据包大小]<br>-d 使用Socket层级的排错功能。<br>-f&lt;存活数值&gt; 设置第一个检测数据包的存活数值TTL的大小。<br>-F 设置勿离断位。<br>-g&lt;网关&gt; 设置来源路由网关，最多可设置8个。<br>-i&lt;网络界面&gt; 使用指定的网络界面送出数据包。<br>-I 使用ICMP回应取代UDP资料信息。<br>-m&lt;存活数值&gt; 设置检测数据包的最大存活数值TTL的大小。<br>-n 直接使用IP地址而非主机名称。<br>-p&lt;通信端口&gt; 设置UDP传输协议的通信端口。<br>-r 忽略普通的Routing Table，直接将数据包送到远端主机上。<br>-s&lt;来源地址&gt; 设置本地主机送出数据包的IP地址。<br>-t&lt;服务类型&gt; 设置检测数据包的TOS数值。<br>-v 详细显示指令的执行过程。<br>-w&lt;超时秒数&gt; 设置等待远端主机回报的时间。<br>-x 开启或关闭数据包的正确性检验。</p>
-</blockquote>
-<hr>
-<h2 id="简化的路由追踪命令-tracepath"><a href="#简化的路由追踪命令-tracepath" class="headerlink" title="简化的路由追踪命令: tracepath "></a>简化的路由追踪命令: tracepath <ip></ip></h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$tracepath</span> xiaoxin123.top</span><br><span class="line"> 1?: [LOCALHOST]                                         pmtu 1500</span><br><span class="line"> 1:  10.124.224.22                                         0.844ms</span><br><span class="line"> 1:  10.124.224.22                                         0.767ms</span><br><span class="line"> 2:  11.63.116.117                                         1.122ms</span><br><span class="line"> 3:  11.48.239.125                                         1.124ms</span><br><span class="line"> 4:  45.112.220.37                                         1.194ms</span><br><span class="line"> 5:  117.49.54.50                                          6.602ms</span><br><span class="line"> 6:  117.49.37.250                                         7.319ms</span><br><span class="line"> 7:  no reply</span><br><span class="line"> 8:  183.2.182.125                                        14.588ms asymm  7</span><br><span class="line">Resume: pmtu 1500 hops 16 back 16</span><br></pre></td></tr></tbody></table></figure>
-<p><code>相关命令参数：</code></p>
-<blockquote>
-<p>用法及参数<br>-n 显示IP，不显示主机<br>-l 初始化包的长度，默认65535<br>-b 打印主机名以及IP信息<br>-p 指定端口<br>-m 设置最大的跳跃节点数，默认是30</p>
-</blockquote>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p><code>arp</code></p>
-<blockquote>
-<ol>
-<li>ARP 代表“地址解析协议”，是一种用于将 IP 地址映射到局域网上的物理 MAC 地址的协议<br>ARP（地址解析协议）是一种网络协议，用于从 <code>IP</code> 地址中找出设备的<code>硬件 (MAC) 地址</code>。</li>
-<li>当设备想要与本地网络上的其他设备通信时使用它，发送设备使用 <code>ARP</code> 将 IP 地址转换为 MAC 地址。</li>
-<li>设备发送一个 ARP 请求消息，其中包含接收设备的 IP 地址。 本地网段上的所有设备都会看到该消息，但只有具有该 IP 地址的设备会使用包含其 MAC 地址的 ARP 回复消息进行响应。 发送设备现在有足够的信息将数据包发送到接收设备。</li>
+<h2 id="Mirosoft套餐激活工具"><a href="#Mirosoft套餐激活工具" class="headerlink" title="Mirosoft套餐激活工具"></a>Mirosoft套餐激活工具</h2><ol>
+<li><a href="https://otp.landian.vip/zh-cn/download.html">下载:<strong>Office Tool Plus</strong></a></li>
+<li>选择对应的镜像和对应的版本点击下载即可：<br><img src="https://pic.imgdb.cn/item/66804492d9c307b7e9181107.png" alt="官网"></li>
+<li>下载安装压缩包后解压，找到 <strong>Office Tool Plus.exe</strong> 右键管理员运行：<br><img src="https://pic.imgdb.cn/item/66804546d9c307b7e918f812.png" alt="解压包的文件"></li>
+<li>打开应用后、选择部署的产品：<br><img src="https://pic.imgdb.cn/item/66804676d9c307b7e91a229b.png" alt="选择部署的产品"></li>
+<li>激活</li>
 </ol>
+<ul>
+<li>方法1：<br><img src="https://pic.imgdb.cn/item/66804782d9c307b7e91b7037.png" alt="激活产品"></li>
+<li>方法2：<br>如果方法1激活失败，可以尝试使用方法2激活：<br>在工具中按 __ctrl+shift+p__，再输入 <strong>ospp /insLicID MondoVolume /sethst:kms.loli.best /setprt:1688 /act</strong><br><img src="https://pic.imgdb.cn/item/66804924d9c307b7e91cf6be.png" alt="激活方法2"></li>
+</ul>
+<ol start="6">
+<li>打开相应的产品查看是否已激活</li>
+</ol>
+<hr>
+<h2 id="Windows系统激活工具"><a href="#Windows系统激活工具" class="headerlink" title="Windows系统激活工具"></a>Windows系统激活工具</h2><ul>
+<li>这是一个github开源的项目，获得了84.6k stat<br><a href="https://github.com/massgravel/Microsoft-Activation-Scripts">原项目地址</a><br><img src="https://camo.githubusercontent.com/4de5ba22ebf14d7e4d9a63b770d2ac02c2958f92b0c045ba4ce8b86c6e216f68/68747470733a2f2f6d61737367726176652e6465762f696d672f6c6f676f5f736d616c6c2e706e67" alt="github图标"><br><strong>此软件是由GitHub托管，并已经获取最近更新。激活工具集合了KMS38/HWID/激活180天等等。还可以激活Windows Office办公软件，本博客推荐使用HWID方式激活系统。</strong></li>
+</ul>
+<h3 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h3><ul>
+<li>方法一：</li>
+</ul>
+<ol>
+<li>PowerShell 命令行安装 (<strong>推荐</strong>)<blockquote>
+<p>打开你的 Windows，右键单击 Windows 开始菜单并选择 PowerShell 或终端（不是 CMD）。复制并粘贴如下代码，然后按回车键：<br><img src="https://pic.imgdb.cn/item/66804f47d9c307b7e92446e6.png" alt="powershell"></p>
 </blockquote>
-<p><code>ARP过程的解释：</code></p>
-<blockquote>
-<p>假设主机 A 想与主机 B 通信。主机 A 知道主机 B 的 IP 地址，但不知道主机 B 的 MAC 地址。为了找出主机B的MAC地址，主机A发送一个ARP请求，列出主机B的IP地址作为目的IP地址，MAC地址为FF:FF:FF:FF:FF:FF（以太网广播） .交换机会将帧转发到所有接口。<br>网段上的每个设备都会收到该数据包，但由于目标 IP 地址是主机 B 的 IP 地址，因此只有主机 B 会回复 ARP 回复数据包，并列出其 MAC 地址。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">irm</span> https://get.activated.win | <span class="built_in">iex</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#如果第一次执行报错，关闭后在执行即可</span></span><br></pre></td></tr></tbody></table></figure></li>
+<li>执行命令后会弹出窗口：<br><img src="https://pic.imgdb.cn/item/66804f47d9c307b7e9244713.png" alt="窗口"></li>
+<li>按照上图选择相应<strong>数字</strong>的激活方式即可</li>
+</ol>
+<ul>
+<li>方法二：（不建议）</li>
+</ul>
+<ol>
+<li>下载源文件 <blockquote>
+<p>从 GitHub 上下载开源文件。<br>解压缩下载的 zip 文件。<br>在解压的文件中找到名为 All-In-One-Version 的文件夹。<br>运行名为 MAS_AIO.cmd 的文件。<br>按照屏幕上的说明即可轻松激活您的软件。<br><img src="https://pic.imgdb.cn/item/66805084d9c307b7e92567a5.png" alt="github源文件"></p>
 </blockquote>
-<p><code>Linux中的arp命令是什么</code></p>
-<blockquote>
-<p>ARP 代表“地址解析协议”，是一种用于将 IP 地址映射到局域网上的物理 MAC 地址的协议。</p>
-</blockquote>
-<h3 id="arp常用命令"><a href="#arp常用命令" class="headerlink" title="arp常用命令"></a>arp常用命令</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 1.查看 Linux 上的 ARP 表</span></span><br><span class="line">arp -a</span><br><span class="line"><span class="comment">#输出：第一列是IP地址，第二列对应MAC地址。</span></span><br><span class="line">gateway (172.16.31.253) at ee:ff:ff:ff:ff:se [ether] on eth0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#2. 指定 IP 地址来查找特定 IP 地址的 ARP 缓存条目</span></span><br><span class="line">arp -a &lt;IP地址&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#3. 删除arp表中指定的 IP 地址</span></span><br><span class="line">arp -d 192.168.67.23</span><br><span class="line"></span><br><span class="line"><span class="comment">#4. 删除所有</span></span><br><span class="line">arp -d *</span><br><span class="line"></span><br><span class="line"><span class="comment">#5. 添加静态条目将IP地址解析为物理地址</span></span><br><span class="line">arp -s 192.168.67.15 00-a5-00-34-c3-09</span><br></pre></td></tr></tbody></table></figure>]]></content>
+</li>
+</ol>
+]]></content>
       <categories>
-        <category>linux</category>
+        <category>干货</category>
       </categories>
       <tags>
-        <tag>linux, 网络</tag>
+        <tag>windows</tag>
+        <tag>office</tag>
       </tags>
   </entry>
   <entry>
@@ -1688,289 +1920,6 @@
       </categories>
       <tags>
         <tag>nginx</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>rainmeter自定义个性化windows桌面</title>
-    <url>/looking/1c9e63ed.html</url>
-    <content><![CDATA[<p><strong>效果如下：</strong><br><img src="https://pic.imgdb.cn/item/667f9fead9c307b7e91156ee.png" alt="桌面效果"><br><strong>主题包</strong>:<br><a href="https://www.alipan.com/s/p645sPEZxhF">提取码：6ij4</a></p>
-<p><strong>如果使用我的皮肤包，只需下载主题包解压后将目录放到<em>C:\Users\Administrator\Documents\Rainmeter\Skins</em>即可</strong></p>
-<h2 id="1-下载rainmeter"><a href="#1-下载rainmeter" class="headerlink" title="1.下载rainmeter"></a>1.下载rainmeter</h2><p><a href="https://www.rainmeter.net/download">下载地址</a></p>
-<h2 id="2-安装-一直按下一步即可"><a href="#2-安装-一直按下一步即可" class="headerlink" title="2.安装 一直按下一步即可"></a>2.安装 一直按下一步即可</h2><ul>
-<li>效果如下：<br><img src="https://pic.imgdb.cn/item/667fa11bd9c307b7e912d511.png" alt="安装"></li>
-</ul>
-<h2 id="3-下载主题"><a href="#3-下载主题" class="headerlink" title="3.下载主题"></a>3.下载主题</h2><ul>
-<li><p>这里有很多主题，可以按自己的风格下载安装即可<br><a href="https://zhutix.com/tag/rainmeter/?post_order=views">下载地址</a></p>
-</li>
-<li><p>我这里下载</p>
-<ul>
-<li>Welfare</li>
-<li>RetrOcOlOr</li>
-</ul>
-</li>
-<li><p>然后在这个基础上自定义自己的桌面</p>
-</li>
-</ul>
-<h2 id="4-自定义桌面（代码的解析）"><a href="#4-自定义桌面（代码的解析）" class="headerlink" title="4.自定义桌面（代码的解析）"></a>4.自定义桌面（代码的解析）</h2><ul>
-<li><p>图标代码：<br><img src="https://pic.imgdb.cn/item/667fa368d9c307b7e9169882.png"></p>
-</li>
-<li><p>代码解析：（注意这是rainmeter的安装路径）</p>
-<ul>
-<li><p>在主题文件中：C:\Users\Administrator\Documents\Welfare@Resources\Variables.inc 找到这个变量文件打开：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"></span><br><span class="line">; Rainmeter Variables</span><br><span class="line">[Variables]</span><br><span class="line">Author=Morteza Nasirivand</span><br><span class="line">Language=English</span><br><span class="line">Location=IRXX0018</span><br><span class="line">Unit=f</span><br><span class="line">Format=H</span><br><span class="line">Hidden=0</span><br><span class="line">Hidden2=1</span><br><span class="line">Player=WMP</span><br><span class="line"></span><br><span class="line">;图标变量</span><br><span class="line">;如果有多个图标按这个格式添加即可</span><br><span class="line"></span><br><span class="line">;如这里是 我的电脑 打开的图标</span><br><span class="line">LinkIcon1NameAndPath=#@#\MyComputer.png			;图标原始状态</span><br><span class="line">HoverIcon1NameAndPath=#@#\MyComputer-1.png		;鼠标放到图标后的变化的图标</span><br><span class="line">Link1Text=myComputer							;图标名</span><br><span class="line">LinkLocationPath1=["shell:MyComputerFolder"]	;点击图标后做的动作、如打开相应的应用或链接网站</span><br><span class="line"></span><br><span class="line">LinkIcon2NameAndPath=#@#\google-1.png</span><br><span class="line">HoverIcon2NameAndPath=#@#\google.png</span><br><span class="line">Link2Text=google</span><br><span class="line">LinkLocationPath2=["C:\Program Files\Google\Chrome\Application\chrome.exe"]</span><br><span class="line"></span><br><span class="line">LinkIcon3NameAndPath=#@#\github.png</span><br><span class="line">HoverIcon3NameAndPath=#@#\github-4.png</span><br><span class="line">Link3Text=github.com</span><br><span class="line">LinkLocationPath3=!Execute ["https://github.com"]</span><br><span class="line"></span><br><span class="line">PythonImgPath1=#@#\python-3.png</span><br><span class="line">PythonImgPath2=#@#\python-5.png</span><br><span class="line">PythonLinkText=pycharm</span><br><span class="line">PythonAppPath=!Execute ["D:\install\pycharm\PyCharm 2022.2.5\bin\pycharm64"]</span><br><span class="line"></span><br><span class="line">LinkIcon5NameAndPath=#@#\gmail-1.png</span><br><span class="line">HoverIcon5NameAndPath=#@#\gmail.png</span><br><span class="line">Link5Text=gmail</span><br><span class="line">LinkLocationPath5=!Execute ["https://mail.google.com/mail/u/1/#inbox/"]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">LinkIcon6NameAndPath=#@#\youtube-1.png</span><br><span class="line">HoverIcon6NameAndPath=#@#\youtube-2.png</span><br><span class="line">Link6Text=youtube</span><br><span class="line">LinkLocationPath6=!Execute ["https://www.youtube.com/"]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">LinkIcon7NameAndPath=#@#\terminal-1.png</span><br><span class="line">HoverIcon7NameAndPath=#@#\terminal-2.png</span><br><span class="line">Link7Text=youtube</span><br><span class="line">LinkLocationPath7=!Execute ["wt"]</span><br><span class="line"></span><br><span class="line">LinkIcon8NameAndPath=#@#\music.png</span><br><span class="line">HoverIcon8NameAndPath=#@#\music-1.png</span><br><span class="line">Link8Text=kugou</span><br><span class="line">LinkLocationPath8=!Execute ["D:\install\kugou\KGMusic\KuGou.exe"]</span><br><span class="line"></span><br><span class="line">LinkIcon9NameAndPath=#@#\bi-1.png</span><br><span class="line">HoverIcon9NameAndPath=#@#\bi.png</span><br><span class="line">Link9Text=bilibili</span><br><span class="line">LinkLocationPath9=!Execute ["https://www.bilibili.com/"]</span><br><span class="line"></span><br><span class="line">LinkIcon10NameAndPath=#@#\wechat.png</span><br><span class="line">HoverIcon10NameAndPath=#@#\wechat-1.png</span><br><span class="line">Link10Text=wechat</span><br><span class="line">LinkLocationPath10=!Execute ["D:\install\wechat\WeChat.exe"]</span><br><span class="line"></span><br><span class="line">LinkIcon11NameAndPath=#@#\note.png</span><br><span class="line">HoverIcon11NameAndPath=#@#\note-1.png</span><br><span class="line">Link11Text=joplin</span><br><span class="line">LinkLocationPath11=!Execute ["C:\Program Files\Joplin\Joplin.exe"]</span><br><span class="line"></span><br><span class="line">ClashImgPath1=#@#\vpn-3.png</span><br><span class="line">ClashImgPath2=#@#\vpn-1.png</span><br><span class="line">ClashLinkText=clash</span><br><span class="line">ClashAppPath=!Execute ["D:\OperationTools\Clash.for.Windows-0.20.39-win\Clash for Windows"]</span><br><span class="line"></span><br><span class="line">VmwareImgPath1=#@#\vm-2.png</span><br><span class="line">VmwareImgPath2=#@#\vm-2.png</span><br><span class="line">VmwareLinkText=vmware</span><br><span class="line">VmwareAppPath=!Execute ["D:\installsoft\VM\vmware.exe"]</span><br><span class="line"></span><br><span class="line">XtermImgPath1=#@#\xterm-1.png</span><br><span class="line">XtermImgPath2=#@#\xterm-2.png</span><br><span class="line">XtermLinkText=vmware</span><br><span class="line">XtermAppPath=!Execute ["D:\install\Xterm\MobaXterm\MobaXterm"]</span><br><span class="line"></span><br><span class="line">TeleImgPath1=#@#\telegram.png</span><br><span class="line">TeleImgPath2=#@#\telegram-2.png</span><br><span class="line">TeleLinkText=telegram</span><br><span class="line">TeleAppPath=!Execute ["D:\install\telegram\Telegram Desktop\Telegram.exe"]</span><br></pre></td></tr></tbody></table></figure>
-</li>
-<li><p>打开 C:\Users\Administrator\Documents\Rainmeter\Skins\Welfare\Links</p>
-</li>
-<li><p>这是桌面图标的配置文件</p>
-</li>
-<li><p>代码解析：</p>
-</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[Rainmeter]</span><br><span class="line">Update=-1</span><br><span class="line">Author=Morteza Nasirivand</span><br><span class="line">DynamicWindowSize=1</span><br><span class="line">AccurateText=1</span><br><span class="line"></span><br><span class="line">[Metadata]</span><br><span class="line">Name=</span><br><span class="line">Author=</span><br><span class="line">Information=</span><br><span class="line">License=</span><br><span class="line">Version=</span><br><span class="line"></span><br><span class="line">;NOTES:</span><br><span class="line">;If you are not familiar with Rainmeter from earlier,please don't edit anything!</span><br><span class="line">;It's too complicated and sensitive,if you don't know what you doing!</span><br><span class="line"></span><br><span class="line">[Variables]</span><br><span class="line">@include=#@#Variables.inc</span><br><span class="line">IconTimeWaiting=4</span><br><span class="line">TextTimeWaiting=8</span><br><span class="line">Size1=0</span><br><span class="line">Size2=0</span><br><span class="line">Size3=0</span><br><span class="line">Size4=0</span><br><span class="line">Size5=0</span><br><span class="line">Size6=0</span><br><span class="line">Size7=0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">;这里设置底部的水平线 SolidColor=12,201,255 颜色</span><br><span class="line">;Meter=Image: 这个参数指定了元素类型，即一个图像元素，尽管在这种情况下它被用来表示一条线</span><br><span class="line">;X=20 和 Y=68: 定义了线条在屏幕上的位置</span><br><span class="line">;W=60 和 H=3: 这些参数定义了线条的宽度和高度</span><br><span class="line">[MeterLine]</span><br><span class="line">Meter=Image</span><br><span class="line">X=20</span><br><span class="line">Y=68</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=12,201,255</span><br><span class="line"></span><br><span class="line">[MeterLine2]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=218,165,32</span><br><span class="line"></span><br><span class="line">[MeterLine3]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=65,105,225</span><br><span class="line"></span><br><span class="line">[MeterPython]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=218, 112, 214</span><br><span class="line"></span><br><span class="line">[MeterLine5]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=0,100,0</span><br><span class="line"></span><br><span class="line">[MeterLine6]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=178, 34, 34</span><br><span class="line"></span><br><span class="line">[MeterLine7]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=50,205,50</span><br><span class="line"></span><br><span class="line">[MeterLine8]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=48, 25, 52</span><br><span class="line"></span><br><span class="line">[MeterLine9]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=255, 127, 80</span><br><span class="line"></span><br><span class="line">[MeterLine10]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=34, 139, 34</span><br><span class="line"></span><br><span class="line">;joplin</span><br><span class="line">[MeterLine11]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=255,255,0</span><br><span class="line"></span><br><span class="line">[MeterClashLine]</span><br><span class="line">Meter=Image</span><br><span class="line">X=60r</span><br><span class="line">Y=r</span><br><span class="line">W=60</span><br><span class="line">H=3</span><br><span class="line">SolidColor=240, 128, 128</span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line">;这里设置图标效果</span><br><span class="line">;变量都保存在Variables.inc 中、开头使用 @include=#@#Variables.inc 调用了</span><br><span class="line">;ImageName=#LinkIcon1NameAndPath# 显示的图片、图片路径存在变量LinkIcon1NameAndPath 中</span><br><span class="line">;LeftMouseUpAction="#LinkLocationPath1#" 定义了当用户在图像上执行左键点击时所执行的动作</span><br><span class="line">;MouseOverAction  鼠标放在图片上的效果</span><br><span class="line">;MouseLeaveAction 鼠标离开图片的效果</span><br><span class="line">;Meter=Image: 这个参数告诉Rainmeter这个元素是一个图像。</span><br><span class="line">;X=40 和 Y=30: 定义了图像在屏幕上的位置。X是水平位置，Y是垂直位置</span><br><span class="line">;W=25: 定义了图像的宽度。</span><br><span class="line">;AntiAlias=1: 这个参数启用了图像的抗锯齿功能，使图像边缘更加平滑</span><br><span class="line">;PreserveAspectRatio=1: 这个参数设置为1时，保持图像的长宽比，以确保图像在改变大小时不会失真</span><br><span class="line">;Group=Icons: 这个参数将该图像元素分组到一个名为 "Icons" 的组中，这有助于管理和布局Rainmeter皮肤中的元素。</span><br><span class="line"></span><br><span class="line">;打开我的电脑</span><br><span class="line">[MeterIcon1]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon1NameAndPath#</span><br><span class="line">X=40</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath1#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon1 ImageAlpha 150][!UpdateMeter MeterIcon1][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon1 ImageAlpha 255][!UpdateMeter MeterIcon1][!Redraw]</span><br><span class="line"></span><br><span class="line">;图标凸起效果</span><br><span class="line">MouseOverAction=[!SetOption MeterIcon1 ImageName "#HoverIcon1NameAndPath#"][!SetOption MeterIcon1 Y "15"][!SetOption MeterIcon1 W "50"][!UpdateMeter MeterIcon1][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon1 ImageName "#LinkIcon1NameAndPath#"][!SetOption MeterIcon1 Y "30"][!SetOption MeterIcon1 W "30"][!UpdateMeter MeterIcon1][!Redraw]</span><br><span class="line"></span><br><span class="line">;google</span><br><span class="line">[MeterIcon2]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon2NameAndPath#</span><br><span class="line">X=100</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath2#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon2 ImageAlpha 150][!UpdateMeter MeterIcon2][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon2 ImageAlpha 255][!UpdateMeter MeterIcon2][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon2 ImageName "#HoverIcon2NameAndPath#"][!SetOption MeterIcon2 Y "15"][!SetOption MeterIcon2 W "50"][!UpdateMeter MeterIcon2][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon2 ImageName "#LinkIcon2NameAndPath#"][!SetOption MeterIcon2 Y "30"][!SetOption MeterIcon2 W "30"][!UpdateMeter MeterIcon2][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon3]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon3NameAndPath#</span><br><span class="line">X=156</span><br><span class="line">Y=27</span><br><span class="line">W=38</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath3#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon3 ImageAlpha 150][!UpdateMeter MeterIcon3][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon3 ImageAlpha 255][!UpdateMeter MeterIcon3][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon3 ImageName "#HoverIcon3NameAndPath#"][!SetOption MeterIcon3 Y "15"][!SetOption MeterIcon3 W "50"][!UpdateMeter MeterIcon3][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon3 ImageName "#LinkIcon3NameAndPath#"][!SetOption MeterIcon3 Y "27"][!SetOption MeterIcon3 W "38"][!UpdateMeter MeterIcon3][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterPychrm]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#PythonImgPath1#</span><br><span class="line">X=215</span><br><span class="line">Y=25</span><br><span class="line">W=36</span><br><span class="line">LeftMouseUpAction="#PythonAppPath#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">MouseOverAction=[!SetOption MeterPychrm ImageName "#PythonImgPath2#"][!SetOption MeterPychrm Y "15"][!SetOption MeterPychrm W "50"][!UpdateMeter MeterPychrm][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterPychrm ImageName "#PythonImgPath1#"][!SetOption MeterPychrm Y "25"][!SetOption MeterPychrm W "38"][!UpdateMeter MeterPychrm][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon5]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon5NameAndPath#</span><br><span class="line">X=272</span><br><span class="line">Y=30</span><br><span class="line">W=35</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath5#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon5 ImageAlpha 150][!UpdateMeter MeterIcon5][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon5 ImageAlpha 255][!UpdateMeter MeterIcon5][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon5 ImageName "#HoverIcon5NameAndPath#"][!SetOption MeterIcon5 Y "15"][!SetOption MeterIcon5 W "50"][!UpdateMeter MeterIcon5][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon5 ImageName "#LinkIcon5NameAndPath#"][!SetOption MeterIcon5 Y "30"][!SetOption MeterIcon5 W "35"][!UpdateMeter MeterIcon5][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon6]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon6NameAndPath#</span><br><span class="line">X=340</span><br><span class="line">Y=30</span><br><span class="line">W=25</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath6#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon6 ImageAlpha 150][!UpdateMeter MeterIcon6][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon6 ImageAlpha 255][!UpdateMeter MeterIcon6][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon6 ImageName "#HoverIcon6NameAndPath#"][!SetOption MeterIcon6 Y "15"][!SetOption MeterIcon6 W "50"][!UpdateMeter MeterIcon6][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon6 ImageName "#LinkIcon6NameAndPath#"][!SetOption MeterIcon6 Y "30"][!SetOption MeterIcon6 W "30"][!UpdateMeter MeterIcon6][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon7]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon7NameAndPath#</span><br><span class="line">X=400</span><br><span class="line">Y=30</span><br><span class="line">W=25</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath7#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon7 ImageAlpha 150][!UpdateMeter MeterIcon7][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon7 ImageAlpha 255][!UpdateMeter MeterIcon7][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon7 ImageName "#HoverIcon7NameAndPath#"][!SetOption MeterIcon7 Y "15"][!SetOption MeterIcon7 W "50"][!UpdateMeter MeterIcon7][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon7 ImageName "#LinkIcon7NameAndPath#"][!SetOption MeterIcon7 Y "30"][!SetOption MeterIcon7 W "30"][!UpdateMeter MeterIcon7][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon8]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon8NameAndPath#</span><br><span class="line">X=460</span><br><span class="line">Y=30</span><br><span class="line">W=25</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath8#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon8 ImageAlpha 150][!UpdateMeter MeterIcon8][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon8 ImageAlpha 255][!UpdateMeter MeterIcon8][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon8 ImageName "#HoverIcon8NameAndPath#"][!SetOption MeterIcon8 Y "15"][!SetOption MeterIcon8 W "50"][!UpdateMeter MeterIcon8][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon8 ImageName "#LinkIcon8NameAndPath#"][!SetOption MeterIcon8 Y "30"][!SetOption MeterIcon8 W "30"][!UpdateMeter MeterIcon8][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon9]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon9NameAndPath#</span><br><span class="line">X=520</span><br><span class="line">Y=30</span><br><span class="line">W=25</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath9#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon9 ImageAlpha 150][!UpdateMeter MeterIcon9][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon9 ImageAlpha 255][!UpdateMeter MeterIcon9][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon9 ImageName "#HoverIcon9NameAndPath#"][!SetOption MeterIcon9 Y "15"][!SetOption MeterIcon9 W "50"][!UpdateMeter MeterIcon9][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon9 ImageName "#LinkIcon9NameAndPath#"][!SetOption MeterIcon9 Y "30"][!SetOption MeterIcon9 W "30"][!UpdateMeter MeterIcon9][!Redraw]</span><br><span class="line"></span><br><span class="line">[MeterIcon10]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon10NameAndPath#</span><br><span class="line">X=580</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath10#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line"></span><br><span class="line">;透明</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon10 ImageAlpha 150][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon10 ImageAlpha 255][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterIcon10 ImageName "#HoverIcon10NameAndPath#"][!SetOption MeterIcon10 Y "15"][!SetOption MeterIcon10 W "50"][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon10 ImageName "#LinkIcon10NameAndPath#"][!SetOption MeterIcon10 Y "30"][!SetOption MeterIcon10 W "30"][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line"></span><br><span class="line">;joplin</span><br><span class="line">[MeterIcon11]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#LinkIcon11NameAndPath#</span><br><span class="line">X=640</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">LeftMouseUpAction="#LinkLocationPath11#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line"></span><br><span class="line">;透明</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon10 ImageAlpha 150][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon10 ImageAlpha 255][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line"></span><br><span class="line">;图标变大变小的效果</span><br><span class="line">MouseOverAction=[!SetOption MeterIcon11 ImageName "#HoverIcon11NameAndPath#"][!SetOption MeterIcon11 Y "15"][!SetOption MeterIcon11 W "50"][!UpdateMeter MeterIcon11][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterIcon11 ImageName "#LinkIcon11NameAndPath#"][!SetOption MeterIcon11 Y "30"][!SetOption MeterIcon11 W "30"][!UpdateMeter MeterIcon11][!Redraw]</span><br><span class="line"></span><br><span class="line">;clash</span><br><span class="line">[MeterClash]</span><br><span class="line">Meter=Image</span><br><span class="line">ImageName=#ClashImgPath1#</span><br><span class="line">X=700</span><br><span class="line">Y=30</span><br><span class="line">W=30</span><br><span class="line">;LeftMouseUpAction 鼠标左键点击的动作-运行exe</span><br><span class="line">LeftMouseUpAction="#ClashAppPath#"</span><br><span class="line">AntiAlias=1</span><br><span class="line">PreserveAspectRatio=1</span><br><span class="line">Group=Icons</span><br><span class="line"></span><br><span class="line">;透明</span><br><span class="line">;MouseOverAction=[!SetOption MeterIcon10 ImageAlpha 150][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line">;MouseLeaveAction=[!SetOption MeterIcon10 ImageAlpha 255][!UpdateMeter MeterIcon10][!Redraw]</span><br><span class="line"></span><br><span class="line">MouseOverAction=[!SetOption MeterClash ImageName "#ClashImgPath2#"][!SetOption MeterClash Y "15"][!SetOption MeterClash W "50"][!UpdateMeter MeterClash][!Redraw]</span><br><span class="line">MouseLeaveAction=[!SetOption MeterClash ImageName "#ClashImgPath1#"][!SetOption MeterClash Y "30"][!SetOption MeterClash W "30"][!UpdateMeter MeterClash][!Redraw]</span><br><span class="line">;-------------------------------------------------------------</span><br><span class="line">;-------------------------------------------------------------</span><br></pre></td></tr></tbody></table></figure>
-
-<p><strong>根据上面的代码，更改自己需要的链接和图标路径即可， ；号为注释</strong></p>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="把rainmeter-软件的开机自启关闭、使用windows的任务计划程序来开机后在启动、不然会导致开机速度很慢"><a href="#把rainmeter-软件的开机自启关闭、使用windows的任务计划程序来开机后在启动、不然会导致开机速度很慢" class="headerlink" title="把rainmeter 软件的开机自启关闭、使用windows的任务计划程序来开机后在启动、不然会导致开机速度很慢"></a>把<code>rainmeter</code> 软件的开机自启关闭、使用windows的<code>任务计划程序</code>来开机后在启动、不然会导致开机速度很慢</h3><ol>
-<li>打开 任务计划程序</li>
-</ol>
-<ul>
-<li>win + R</li>
-<li>输入：taskschd.msc<br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r1.7p6ws6lt5.avif" alt="r1"></li>
-</ul>
-<ol start="2">
-<li><p>创建基本任务<br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r2.9dcv0gameq.avif" alt="r2"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r3.1sexw93t9v.avif" alt="r3"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r4.5mnpf7lr79.avif" alt="r4"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r5.3rb4ml9bli.avif" alt="r5"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r6.8ojlgfn3ef.avif" alt="r6"></p>
-</li>
-<li><p>保存后、到任务这里右键属性（如果保存后直接跳到属性就不用另外点击了）<br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r7.8dwrna7v95.avif" alt="r7"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r8.3goatfu3ga.avif" alt="r8"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r9.13loc8ga9o.avif" alt="r9"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r10.99t92qhjp9.avif" alt="r10"><br><img src="https://xiaoxin-top.github.io/picx-images-hosting/img/xiaoxin-r11.7egoa4543j.avif" alt="r11"></p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>干货</category>
-      </categories>
-      <tags>
-        <tag>windows</tag>
-        <tag>rainmeter</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>windows和office套餐激活工具</title>
-    <url>/looking/41ec75e8.html</url>
-    <content><![CDATA[<h1 id="此文章分为两部分："><a href="#此文章分为两部分：" class="headerlink" title="此文章分为两部分："></a>此文章分为两部分：</h1><ul>
-<li>Mirosoft套餐激活工具</li>
-<li>Windows系统激活工具</li>
-</ul>
-<h2 id="Mirosoft套餐激活工具"><a href="#Mirosoft套餐激活工具" class="headerlink" title="Mirosoft套餐激活工具"></a>Mirosoft套餐激活工具</h2><ol>
-<li><a href="https://otp.landian.vip/zh-cn/download.html">下载:<strong>Office Tool Plus</strong></a></li>
-<li>选择对应的镜像和对应的版本点击下载即可：<br><img src="https://pic.imgdb.cn/item/66804492d9c307b7e9181107.png" alt="官网"></li>
-<li>下载安装压缩包后解压，找到 <strong>Office Tool Plus.exe</strong> 右键管理员运行：<br><img src="https://pic.imgdb.cn/item/66804546d9c307b7e918f812.png" alt="解压包的文件"></li>
-<li>打开应用后、选择部署的产品：<br><img src="https://pic.imgdb.cn/item/66804676d9c307b7e91a229b.png" alt="选择部署的产品"></li>
-<li>激活</li>
-</ol>
-<ul>
-<li>方法1：<br><img src="https://pic.imgdb.cn/item/66804782d9c307b7e91b7037.png" alt="激活产品"></li>
-<li>方法2：<br>如果方法1激活失败，可以尝试使用方法2激活：<br>在工具中按 __ctrl+shift+p__，再输入 <strong>ospp /insLicID MondoVolume /sethst:kms.loli.best /setprt:1688 /act</strong><br><img src="https://pic.imgdb.cn/item/66804924d9c307b7e91cf6be.png" alt="激活方法2"></li>
-</ul>
-<ol start="6">
-<li>打开相应的产品查看是否已激活</li>
-</ol>
-<hr>
-<h2 id="Windows系统激活工具"><a href="#Windows系统激活工具" class="headerlink" title="Windows系统激活工具"></a>Windows系统激活工具</h2><ul>
-<li>这是一个github开源的项目，获得了84.6k stat<br><a href="https://github.com/massgravel/Microsoft-Activation-Scripts">原项目地址</a><br><img src="https://camo.githubusercontent.com/4de5ba22ebf14d7e4d9a63b770d2ac02c2958f92b0c045ba4ce8b86c6e216f68/68747470733a2f2f6d61737367726176652e6465762f696d672f6c6f676f5f736d616c6c2e706e67" alt="github图标"><br><strong>此软件是由GitHub托管，并已经获取最近更新。激活工具集合了KMS38/HWID/激活180天等等。还可以激活Windows Office办公软件，本博客推荐使用HWID方式激活系统。</strong></li>
-</ul>
-<h3 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h3><ul>
-<li>方法一：</li>
-</ul>
-<ol>
-<li>PowerShell 命令行安装 (<strong>推荐</strong>)<blockquote>
-<p>打开你的 Windows，右键单击 Windows 开始菜单并选择 PowerShell 或终端（不是 CMD）。复制并粘贴如下代码，然后按回车键：<br><img src="https://pic.imgdb.cn/item/66804f47d9c307b7e92446e6.png" alt="powershell"></p>
-</blockquote>
-<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">irm</span> https://get.activated.win | <span class="built_in">iex</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#如果第一次执行报错，关闭后在执行即可</span></span><br></pre></td></tr></tbody></table></figure></li>
-<li>执行命令后会弹出窗口：<br><img src="https://pic.imgdb.cn/item/66804f47d9c307b7e9244713.png" alt="窗口"></li>
-<li>按照上图选择相应<strong>数字</strong>的激活方式即可</li>
-</ol>
-<ul>
-<li>方法二：（不建议）</li>
-</ul>
-<ol>
-<li>下载源文件 <blockquote>
-<p>从 GitHub 上下载开源文件。<br>解压缩下载的 zip 文件。<br>在解压的文件中找到名为 All-In-One-Version 的文件夹。<br>运行名为 MAS_AIO.cmd 的文件。<br>按照屏幕上的说明即可轻松激活您的软件。<br><img src="https://pic.imgdb.cn/item/66805084d9c307b7e92567a5.png" alt="github源文件"></p>
-</blockquote>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>干货</category>
-      </categories>
-      <tags>
-        <tag>windows</tag>
-        <tag>office</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vmware虚拟机网络配置</title>
-    <url>/looking/300f2b.html</url>
-    <content><![CDATA[<h2 id="vmwarme-网络类型"><a href="#vmwarme-网络类型" class="headerlink" title="vmwarme 网络类型"></a>vmwarme 网络类型</h2><blockquote>
-<p>VMware虚拟机有三种网络模式，分别是<strong>Bridged(桥接模式)<strong>、</strong>NAT(网络地址转换模式)<strong>、</strong>Host-only(主机模式)</strong><br>VMware workstation安装好之后会多出两个网络连接,分别是:<br><strong>VMware Network Adapter VMnet1</strong><br><strong>VMware Network Adapter VMnet8</strong><br>上面这两个是可以在主机的网络连接中可以查看到的，<br>还有一个是<strong>VMnet0</strong>，可以在virtual network editor中看到<br>这三个虚拟网络都是VMware安装好之后自动生成的，不需要手动修改。</p>
-<blockquote>
-<p>其中VMnet0用于Bridged模式，VMnet1用于Host-only模式，Vmnet8用于NAT模式。VMnet8和VMnet1提供DHCP服务，VMnet0默认则不提供。</p>
-</blockquote>
-</blockquote>
-<p><strong>图一</strong><br><img src="https://pic.imgdb.cn/item/667eddecd9c307b7e93831e0.png" alt="bridged" title="图一"></p>
-<h2 id="1-Bridged-桥接模式-VMnet0"><a href="#1-Bridged-桥接模式-VMnet0" class="headerlink" title="1. Bridged 桥接模式 (VMnet0)"></a>1. Bridged 桥接模式 (VMnet0)</h2><blockquote>
-<p>在这种模式下，VMWare虚拟出来的操作系统就像是局域网中的一台<strong>独立的主机</strong>，它可以访问网内任何一台机器，你需要手工为虚拟系统配置IP地址、子网掩码，而且还要和宿主机器处于同网段，这样虚拟系统才能和宿主机器进行通信，虚拟系统和宿主机器的关系，就像连接在同一个Hub上的两台电脑。从网络技术上理解相当于在宿主机前端加设了一个虚拟交换机，然后宿主机和所有虚拟机共享这个交换机。</p>
-</blockquote>
-<ul>
-<li>如果你想利用VMWare在局域网内新建一个虚拟服务器，为局域网用户提供网络服务，就应该选择桥接模式。</li>
-</ul>
-<h3 id="1-1-桥接模式下的网络设置"><a href="#1-1-桥接模式下的网络设置" class="headerlink" title="1.1 桥接模式下的网络设置"></a>1.1 桥接模式下的网络设置</h3><blockquote>
-<ol>
-<li>虚拟机网络设置：桥接模式（选择图一中的桥接模式）</li>
-<li>查看本机的以太网网络设置：ipconfig </li>
-<li>配置虚拟机网络：<ul>
-<li>vim /etc/sysconfig/network-scripts/ifcfg-eth0</li>
-<li>ip地址和本机同一个网段</li>
-<li>网关地址、子网掩码、DNS和本机一样即可</li>
-<li>重启虚拟机网卡</li>
-<li>测试：ping 本机或外网</li>
-</ul>
-</li>
-</ol>
-</blockquote>
-<h2 id="2-NAT-网络地址转换模式-VMnet8"><a href="#2-NAT-网络地址转换模式-VMnet8" class="headerlink" title="2. NAT 网络地址转换模式 (VMnet8)"></a>2. NAT 网络地址转换模式 (VMnet8)</h2><blockquote>
-<p>NAT（Network Address Translation）网络地址转换，是一种网络技术，它允许一个网络中的计算机通过一个公共网络（如互联网）来通信。<br>NAT技术通过将一个私有IP地址转换为一个公共IP地址来实现通信。<br>NAT技术将一个私有IP地址转换为一个公共IP地址来实现通信。<br>这里的虚拟机NET模式：</p>
-<blockquote>
-<p>就是让虚拟系统借助NAT的功能，通过宿主机所在的网络来访问公网。在这种模式下宿主机成为双网卡主机，同时参与现有的宿主局域网和新建的虚拟局域网，但由于加设了一个虚拟的NAT服务器，使得虚拟局域网内的虚拟机在对外访问时，使用的则是宿主机的IP地址，这样从外部网络来看，只能看到宿主机，完全看不到新建的虚拟局域网。</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<p>采用NAT模式最大的优势是虚拟系统接入互联网非常简单，你不需要进行任何其他的配置，只需要宿主机器能访问互联网即可。</p>
-</blockquote>
-<ul>
-<li>如果你想利用VMWare安装一个新的虚拟系统，在虚拟系统中不用进行任何手工配置就能直接访问互联网，建议你采用NAT模式。</li>
-</ul>
-<h3 id="2-1-NAT模式下的网络设置"><a href="#2-1-NAT模式下的网络设置" class="headerlink" title="2.1 NAT模式下的网络设置"></a>2.1 NAT模式下的网络设置</h3><blockquote>
-<ol>
-<li>检查宿主机的VMware DHCP Service 和VMwareNAT Service两个服务是否启动：<br><img src="https://pic.imgdb.cn/item/667ee2b1d9c307b7e94130f2.png" alt="任务管理器"></li>
-</ol>
-</blockquote>
-<blockquote>
-<ol start="2">
-<li>虚拟机网络选择设置：NAT模式（选择图一中的NAT模式）</li>
-<li>虚拟机中网络配置：因为NAT有DHCP服务，所以我们只需要将BOOTPROTO参数设置为dhcp就可以了，由dhcp服务器分配IP地址。</li>
-<li>注意如果虚拟机中网卡配置中有 <strong>ONBOOT</strong> 参数为no，那么虚拟机网卡不会自动启动，需要手动启动网卡、可以直接注销掉</li>
-</ol>
-</blockquote>
-<ul>
-<li><p>默认情况下VMware和虚拟机的配置都不需要修改，所以NAT模式是最简单的</p>
-</li>
-<li><p>默认情况下会自动分配，当然你也也可以自行配置网段和网关、如下图：<br><img src="https://pic.imgdb.cn/item/667ee8a1d9c307b7e94ab6ac.png" alt="配置自定义net网络"></p>
-</li>
-<li><p><strong>注意</strong>：如果将本机的<strong>VMnet8</strong>网卡禁掉的话就无法在本机远程（ssh）到虚拟主机了、但是可以ping通<br>· <em>这就是NET模式、利用虚拟的NET设备以及虚拟的DHCP服务器来使虚拟机连接外网、而VMnet8虚拟网卡是用来与虚拟机通信的</em></p>
-</li>
-</ul>
-<h2 id="3-Host-only-仅主机模式-VMnet1"><a href="#3-Host-only-仅主机模式-VMnet1" class="headerlink" title="3. Host-only 仅主机模式 (VMnet1)"></a>3. Host-only 仅主机模式 (VMnet1)</h2><ul>
-<li>在某些特殊的网络调试环境中，要求将真实环境和虚拟环境隔离开，这时你就可采用host-only模式，在这种模式下宿主机上的所有虚拟机是可以相互通信的，但虚拟机和真实的网络是被隔离开的。</li>
-<li>在这种模式下新建了一个由所有虚拟机与宿主机所构成的局域网，但该局域网与宿主机本身所处的现有局域网是相互独立的，如果不做额外路由设置，这两个局域网之间不会连通，因此新建的局域网可以认为是一个单独从属于当前宿主机的私有网络，其成员为当前宿主机和相关的所有虚拟机。</li>
-<li>从网络技术上讲相当于为宿主机增添了一个虚拟网卡，让宿主机变成一台双网卡主机（宿主网卡+虚拟网卡）。同时在宿主机后端加设一个虚拟交换机，让宿主机和所有虚拟机构成另一个虚拟的局域网。由于具备双网卡，宿主机可同时参与两个局域网（现有的宿主局域网+新建的虚拟局域网），只不过缺省情况下两个局域网不连通。</li>
-<li><strong>如果你想利用VMWare创建一个与网内其他机器相隔离的虚拟系统，进行某些特殊的网络调试工作，可以选择host-only模式。</strong></li>
-</ul>
-<h3 id="3-1-Host-only模式下的网络设置"><a href="#3-1-Host-only模式下的网络设置" class="headerlink" title="3.1 Host-only模式下的网络设置"></a>3.1 Host-only模式下的网络设置</h3><ul>
-<li>Host-only模式下是由VMnet1网卡负责的，VMnet1提供DHCP服务，所以虚拟机中我们不需手动设定IP<blockquote>
-<ol>
-<li>虚拟机网络设置：Host-only模式即可（选择图一中的Host-only模式）</li>
-<li>配置好后主机就能ping通虚拟机，但虚拟机ping主机时就要注意了，不是去ping宿主网卡产生的IP地址，而是由虚拟网卡VMnet1产生的IP地址，宿主机命令行中输入ipconfig就可看到VMnet1的产生的IP地址</li>
-</ol>
-</blockquote>
-</li>
-</ul>
-<p><a href="https://blog.51cto.com/u_15169172/2710721">可参考: https://blog.51cto.com/u_15169172/2710721</a></p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>vmware网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>标签语法</title>
-    <url>/looking/630f8407.html</url>
-    <content><![CDATA[<div calss="anzhiyu-tag-link"><a class="tag-Link" target="_blank" href="https://blog.anheyu.com/posts/d50a.html">
-    <div class="tag-link-tips">引用站外地址</div>
-    <div class="tag-link-bottom">
-        <div class="tag-link-left" style="">
-          <i class="anzhiyufont anzhiyu-icon-link" style=""></i>
-        </div>
-        <div class="tag-link-right">
-            <div class="tag-link-title">参考</div>
-            <div class="tag-link-sitename">标签外挂</div>
-        </div>
-        <i class="anzhiyufont anzhiyu-icon-angle-right"></i>
-    </div>
-    </a></div>
-
-<h2 id="tab-分栏"><a href="#tab-分栏" class="headerlink" title="tab 分栏"></a>tab 分栏</h2><div class="tabs" id="标签语法"><ul class="nav-tabs"><button type="button" class="tab  active" data-href="标签语法-1">标签语法</button><button type="button" class="tab " data-href="标签语法-2">参数配置</button><button type="button" class="tab " data-href="标签语法-3">样式预览</button><button type="button" class="tab " data-href="标签语法-4">源码样例</button></ul><div class="tab-contents"><div class="tab-item-content active" id="标签语法-1"><figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs Unique name, [index] %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab [Tab caption] [@icon] --&gt;</span><br><span class="line"></span><br><span class="line">Any content (support inline tags too).</span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure></div><div class="tab-item-content" id="标签语法-2"><ol>
-<li>Unique name :<ul>
-<li>选项卡块标签的唯一名称，不带逗号。</li>
-<li>将在#id 中用作每个标签及其索引号的前缀。</li>
-<li>如果名称中包含空格，则对于生成#id，所有空格将由破折号代替。</li>
-<li>仅当前帖子/页面的 URL 必须是唯一的！</li>
-</ul>
-</li>
-<li>[index]:<ul>
-<li>活动选项卡的索引号。</li>
-<li>如果未指定，将选择第一个标签（1）。</li>
-<li>如果 index 为-1，则不会选择任何选项卡。</li>
-<li>可选参数。</li>
-</ul>
-</li>
-<li>[Tab caption]:<ul>
-<li>当前选项卡的标题。</li>
-<li>如果未指定标题，则带有制表符索引后缀的唯一名称将用作制表符的标题。</li>
-<li>如果未指定标题，但指定了图标，则标题将为空。</li>
-<li>可选参数。</li>
-</ul>
-</li>
-<li>[@icon]: <ul>
-<li>FontAwesome 图标名称（全名，看起来像“ fas fa-font”） - 可以指定带空格或不带空格； - 例如’Tab caption @icon’ 和 ‘Tab caption@icon’. - 可选参数。</li>
-</ul>
-</li>
-</ol></div><div class="tab-item-content" id="标签语法-3"><div class="note info simple"><p>第一种，预设选择第一个【默认】</p>
-</div>
-<div class="tabs" id="test1"><ul class="nav-tabs"><button type="button" class="tab  active" data-href="test1-1">test1 1</button><button type="button" class="tab " data-href="test1-2">test1 2</button><button type="button" class="tab " data-href="test1-3">test1 3</button></ul><div class="tab-contents"><div class="tab-item-content active" id="test1-1"><p><strong>默认显示我tab1</strong></p></div><div class="tab-item-content" id="test1-2"><p><strong>This is Tab 2.</strong></p></div><div class="tab-item-content" id="test1-3"><p><strong>This is Tab 3.</strong></p></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>
-
-<div class="note info simple"><p>第二种，预设选择第3个tab标签</p>
-</div>
-<div class="tabs" id="test2"><ul class="nav-tabs"><button type="button" class="tab " data-href="test2-1">test2 1</button><button type="button" class="tab " data-href="test2-2">test2 2</button><button type="button" class="tab  active" data-href="test2-3">test2 3</button></ul><div class="tab-contents"><div class="tab-item-content" id="test2-1"><p><strong>This is Tab 1.</strong></p></div><div class="tab-item-content" id="test2-2"><p><strong>This is Tab 2.</strong></p></div><div class="tab-item-content active" id="test2-3"><p><strong>默认显示我Tab 3.</strong></p></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>
-
-<div class="note info simple"><p>第三种，没有预设值（默认不显示标签内容、点击后才出现）</p>
-</div>
-<div class="tabs" id="test3"><ul class="nav-tabs no-default"><button type="button" class="tab " data-href="test3-1">test3 1</button><button type="button" class="tab " data-href="test3-2">test3 2</button><button type="button" class="tab " data-href="test3-3">test3 3</button></ul><div class="tab-contents"><div class="tab-item-content" id="test3-1"><p><strong>点我才能显示内容1.</strong></p></div><div class="tab-item-content" id="test3-2"><p><strong>点我才能显示内容2.</strong></p></div><div class="tab-item-content" id="test3-3"><p><strong>点我才能显示内容3.</strong></p></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>
-
-<div class="note info simple"><p>第四种，自定义 Tab 名 + 只有 icon + icon 和 Tab 名</p>
-</div>
-<div class="tabs" id="test4"><ul class="nav-tabs"><button type="button" class="tab  active" data-href="test4-1">第一个Tab</button><button type="button" class="tab " data-href="test4-2"><i class="fab fa-apple-pay" style="text-align: center;"></i></button><button type="button" class="tab " data-href="test4-3"><i class="fas fa-bomb"></i>炸弹</button></ul><div class="tab-contents"><div class="tab-item-content active" id="test4-1"><p><strong>tab 名字为第一个 Tab</strong></p></div><div class="tab-item-content" id="test4-2"><p><strong>只有图标 没有 Tab 名字</strong></p></div><div class="tab-item-content" id="test4-3"><p><strong>名字+icon</strong></p></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div></div><div class="tab-item-content" id="标签语法-4"><div class="note info simple"><ul>
-<li>第一种，预设选择第一个【默认】</li>
-</ul>
-</div>
-<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs test1 %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**默认显示我tab1**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**This is Tab 2.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**This is Tab 3.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure>
-<div class="note info simple"><p>第二种，预设选择第3个tab标签</p>
-</div>
-<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs test2, 3 %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**This is Tab 1.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**This is Tab 2.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**默认显示我Tab 3.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure>
-
-<div class="note info simple"><p>第三种，没有预设值（默认不显示标签内容、点击后才出现）</p>
-</div>
-<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs test3, -1 %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**点我才能显示内容1.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**点我才能显示内容2.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**点我才能显示内容3.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure>
-
-<div class="note info simple"><p>第四种，自定义 Tab 名 + 只有 icon + icon 和 Tab 名</p>
-</div>
-<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs test4 %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab 第一个Tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**tab 名字为第一个 Tab**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab @fab fa-apple-pay --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**只有图标 没有 Tab 名字**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab 炸弹@fas fa-bomb --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**名字+icon**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>]]></content>
-      <categories>
-        <category>hexo</category>
-      </categories>
-      <tags>
-        <tag>hexo,语法</tag>
       </tags>
   </entry>
   <entry>
@@ -2236,6 +2185,86 @@
       </categories>
       <tags>
         <tag>wireshark,网络抓包</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>标签语法</title>
+    <url>/looking/630f8407.html</url>
+    <content><![CDATA[<div calss="anzhiyu-tag-link"><a class="tag-Link" target="_blank" href="https://blog.anheyu.com/posts/d50a.html">
+    <div class="tag-link-tips">引用站外地址</div>
+    <div class="tag-link-bottom">
+        <div class="tag-link-left" style="">
+          <i class="anzhiyufont anzhiyu-icon-link" style=""></i>
+        </div>
+        <div class="tag-link-right">
+            <div class="tag-link-title">参考</div>
+            <div class="tag-link-sitename">标签外挂</div>
+        </div>
+        <i class="anzhiyufont anzhiyu-icon-angle-right"></i>
+    </div>
+    </a></div>
+
+<h2 id="tab-分栏"><a href="#tab-分栏" class="headerlink" title="tab 分栏"></a>tab 分栏</h2><div class="tabs" id="标签语法"><ul class="nav-tabs"><button type="button" class="tab  active" data-href="标签语法-1">标签语法</button><button type="button" class="tab " data-href="标签语法-2">参数配置</button><button type="button" class="tab " data-href="标签语法-3">样式预览</button><button type="button" class="tab " data-href="标签语法-4">源码样例</button></ul><div class="tab-contents"><div class="tab-item-content active" id="标签语法-1"><figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs Unique name, [index] %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab [Tab caption] [@icon] --&gt;</span><br><span class="line"></span><br><span class="line">Any content (support inline tags too).</span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure></div><div class="tab-item-content" id="标签语法-2"><ol>
+<li>Unique name :<ul>
+<li>选项卡块标签的唯一名称，不带逗号。</li>
+<li>将在#id 中用作每个标签及其索引号的前缀。</li>
+<li>如果名称中包含空格，则对于生成#id，所有空格将由破折号代替。</li>
+<li>仅当前帖子/页面的 URL 必须是唯一的！</li>
+</ul>
+</li>
+<li>[index]:<ul>
+<li>活动选项卡的索引号。</li>
+<li>如果未指定，将选择第一个标签（1）。</li>
+<li>如果 index 为-1，则不会选择任何选项卡。</li>
+<li>可选参数。</li>
+</ul>
+</li>
+<li>[Tab caption]:<ul>
+<li>当前选项卡的标题。</li>
+<li>如果未指定标题，则带有制表符索引后缀的唯一名称将用作制表符的标题。</li>
+<li>如果未指定标题，但指定了图标，则标题将为空。</li>
+<li>可选参数。</li>
+</ul>
+</li>
+<li>[@icon]: <ul>
+<li>FontAwesome 图标名称（全名，看起来像“ fas fa-font”） - 可以指定带空格或不带空格； - 例如’Tab caption @icon’ 和 ‘Tab caption@icon’. - 可选参数。</li>
+</ul>
+</li>
+</ol></div><div class="tab-item-content" id="标签语法-3"><div class="note info simple"><p>第一种，预设选择第一个【默认】</p>
+</div>
+<div class="tabs" id="test1"><ul class="nav-tabs"><button type="button" class="tab  active" data-href="test1-1">test1 1</button><button type="button" class="tab " data-href="test1-2">test1 2</button><button type="button" class="tab " data-href="test1-3">test1 3</button></ul><div class="tab-contents"><div class="tab-item-content active" id="test1-1"><p><strong>默认显示我tab1</strong></p></div><div class="tab-item-content" id="test1-2"><p><strong>This is Tab 2.</strong></p></div><div class="tab-item-content" id="test1-3"><p><strong>This is Tab 3.</strong></p></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>
+
+<div class="note info simple"><p>第二种，预设选择第3个tab标签</p>
+</div>
+<div class="tabs" id="test2"><ul class="nav-tabs"><button type="button" class="tab " data-href="test2-1">test2 1</button><button type="button" class="tab " data-href="test2-2">test2 2</button><button type="button" class="tab  active" data-href="test2-3">test2 3</button></ul><div class="tab-contents"><div class="tab-item-content" id="test2-1"><p><strong>This is Tab 1.</strong></p></div><div class="tab-item-content" id="test2-2"><p><strong>This is Tab 2.</strong></p></div><div class="tab-item-content active" id="test2-3"><p><strong>默认显示我Tab 3.</strong></p></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>
+
+<div class="note info simple"><p>第三种，没有预设值（默认不显示标签内容、点击后才出现）</p>
+</div>
+<div class="tabs" id="test3"><ul class="nav-tabs no-default"><button type="button" class="tab " data-href="test3-1">test3 1</button><button type="button" class="tab " data-href="test3-2">test3 2</button><button type="button" class="tab " data-href="test3-3">test3 3</button></ul><div class="tab-contents"><div class="tab-item-content" id="test3-1"><p><strong>点我才能显示内容1.</strong></p></div><div class="tab-item-content" id="test3-2"><p><strong>点我才能显示内容2.</strong></p></div><div class="tab-item-content" id="test3-3"><p><strong>点我才能显示内容3.</strong></p></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>
+
+<div class="note info simple"><p>第四种，自定义 Tab 名 + 只有 icon + icon 和 Tab 名</p>
+</div>
+<div class="tabs" id="test4"><ul class="nav-tabs"><button type="button" class="tab  active" data-href="test4-1">第一个Tab</button><button type="button" class="tab " data-href="test4-2"><i class="fab fa-apple-pay" style="text-align: center;"></i></button><button type="button" class="tab " data-href="test4-3"><i class="fas fa-bomb"></i>炸弹</button></ul><div class="tab-contents"><div class="tab-item-content active" id="test4-1"><p><strong>tab 名字为第一个 Tab</strong></p></div><div class="tab-item-content" id="test4-2"><p><strong>只有图标 没有 Tab 名字</strong></p></div><div class="tab-item-content" id="test4-3"><p><strong>名字+icon</strong></p></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div></div><div class="tab-item-content" id="标签语法-4"><div class="note info simple"><ul>
+<li>第一种，预设选择第一个【默认】</li>
+</ul>
+</div>
+<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs test1 %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**默认显示我tab1**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**This is Tab 2.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**This is Tab 3.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure>
+<div class="note info simple"><p>第二种，预设选择第3个tab标签</p>
+</div>
+<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs test2, 3 %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**This is Tab 1.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**This is Tab 2.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**默认显示我Tab 3.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure>
+
+<div class="note info simple"><p>第三种，没有预设值（默认不显示标签内容、点击后才出现）</p>
+</div>
+<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs test3, -1 %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**点我才能显示内容1.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**点我才能显示内容2.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**点我才能显示内容3.**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure>
+
+<div class="note info simple"><p>第四种，自定义 Tab 名 + 只有 icon + icon 和 Tab 名</p>
+</div>
+<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line">{% tabs test4 %}</span><br><span class="line"></span><br><span class="line">&lt;!-- tab 第一个Tab --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**tab 名字为第一个 Tab**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab @fab fa-apple-pay --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**只有图标 没有 Tab 名字**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- tab 炸弹@fas fa-bomb --&gt;</span><br><span class="line"></span><br><span class="line"><span class="strong">**名字+icon**</span></span><br><span class="line"></span><br><span class="line">&lt;!-- endtab --&gt;</span><br><span class="line"></span><br><span class="line">{% endtabs %}</span><br></pre></td></tr></tbody></table></figure></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo,语法</tag>
       </tags>
   </entry>
   <entry>
