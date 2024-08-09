@@ -2395,4 +2395,36 @@
         <tag>个人博客</tag>
       </tags>
   </entry>
+  <entry>
+    <title>麒麟系统keepalive源码安装</title>
+    <url>/looking/fd521db8.html</url>
+    <content><![CDATA[<h2 id="keepalive源码安装"><a href="#keepalive源码安装" class="headerlink" title="keepalive源码安装"></a>keepalive源码安装</h2><h3 id="1-下载源码包-这里我是用最新的2-3-1版本-：官网"><a href="#1-下载源码包-这里我是用最新的2-3-1版本-：官网" class="headerlink" title="1. 下载源码包(这里我是用最新的2.3.1版本)：官网"></a>1. 下载源码包(这里我是用最新的2.3.1版本)：<a href="https://keepalived.org/download.html">官网</a></h3><h3 id="2-解压安装包执行："><a href="#2-解压安装包执行：" class="headerlink" title="2. 解压安装包执行："></a>2. 解压安装包执行：</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># prefix后边的路径为keepalived安装的路径</span></span><br><span class="line">$ ./configure --prefix=/usr/local/keepalived</span><br><span class="line"></span><br><span class="line">$ make</span><br><span class="line"></span><br><span class="line">$ make install</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-安装openssl-devel"><a href="#3-安装openssl-devel" class="headerlink" title="3. 安装openssl-devel"></a>3. 安装openssl-devel</h3><div class="note warning simple"><p>如果遇到错误：（没有错误则不用管这一步）<br>configure: error:<br>!!! OpenSSL is not properly installed on your system. !!!<br>!!! Can not include OpenSSL headers files.            !!!</p>
+</div>
+
+<ul>
+<li>这是由于没有安装openssl-devel 导致的，安装openssl-devel即可解决</li>
+</ul>
+<h4 id="方法1：在线安装"><a href="#方法1：在线安装" class="headerlink" title="方法1：在线安装"></a>方法1：在线安装</h4><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ yum install openssl-devel</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="方法2：离线安装"><a href="#方法2：离线安装" class="headerlink" title="方法2：离线安装"></a>方法2：离线安装</h4><blockquote>
+<p>这里由于使用的麒麟 V10 SP1系统，所以需要在麒麟官网下载openssl-devel.rpm包，然后使用rpm -ivh安装即可<br>但我是使用虚拟机执行,只下载不按照的方法获取的依赖包</p>
+</blockquote>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ yum install -y --downloadonly --downloaddir=./ openssl-devel-1.1.1f-4.p15.ky10.x86_64</span><br><span class="line"></span><br><span class="line">-rw-r--r-- 1 root root  286848  8月  7 10:40 e2fsprogs-devel-1.45.6-0.p01.ky10.x86_64.rpm</span><br><span class="line">-rw-r--r-- 1 root root   10052  8月  7 10:40 keyutils-libs-devel-1.5.10-11.ky10.x86_64.rpm</span><br><span class="line">-rw-r--r-- 1 root root  164788  8月  7 10:40 krb5-devel-1.17-9.ky10.x86_64.rpm</span><br><span class="line">-rw-r--r-- 1 root root   16644  8月  7 10:40 libverto-devel-0.3.1-2.ky10.x86_64.rpm</span><br><span class="line">-rw-r--r-- 1 root root 1838172  8月  7 10:40 openssl-devel-1.1.1f-4.p15.ky10.x86_64.rpm</span><br></pre></td></tr></tbody></table></figure>
+
+<blockquote>
+<p>安装openssl-devel.rpm包</p>
+</blockquote>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ rpm -ivh *.rpm</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-配置keepalived"><a href="#4-配置keepalived" class="headerlink" title="4. 配置keepalived"></a>4. 配置keepalived</h3><p><a href="https://xiaoxin-top.github.io/looking/121ebbda.html">参考</a></p>
+]]></content>
+      <categories>
+        <category>keepalive, linux</category>
+      </categories>
+      <tags>
+        <tag>keepalive</tag>
+      </tags>
+  </entry>
 </search>
